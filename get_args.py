@@ -1,5 +1,6 @@
+from check_path import check_path
 import argparse
-import ast
+import csv
 
 
 def get_args():
@@ -10,9 +11,15 @@ def get_args():
     parser.add_argument("--full_name_col", type=int, help="Full name column")
     parser.add_argument("--group_col", type=int, help="Group column")
     parser.add_argument("--github_col", type=int, help="Github column")
-    parser.add_argument("--works_structure", "-s", type=lambda x: ast.literal_eval(x), help='Works structure')
+    parser.add_argument("--works_structure", "-s", type=str, help='Path to works structure and description')
     parser.add_argument("--prefix", type=str, help="Prefix for repo")
     parser.add_argument("--out_table_name", "-o", type=str, help="Output table name")
-    args = parser.parse_args()
+    args = vars(parser.parse_args())
 
-    return vars(args)
+    check_path(args['works_structure'])
+    with open(args['works_structure'], 'r') as f:
+        rows = list(csv.reader(f))
+    works_structure = {row[0]: [row[1], row[2]] for row in rows}
+    args['works_structure'] = works_structure
+
+    return args
