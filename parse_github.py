@@ -2,7 +2,7 @@ from Work import Work
 from github import Github
 from github import Auth
 
-TOKEN = "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"
+TOKEN = ""
 
 
 def have_src(contents):
