@@ -1,8 +1,6 @@
-from Work import Work
+from classes import Work
 from github import Github
 from github import Auth
-
-TOKEN = ""
 
 
 def have_src(contents):
@@ -12,11 +10,18 @@ def have_src(contents):
     return False
 
 
+def check_prefix(repo, args):
+    repo_owner, repo_prefix = args['prefix'].split('/')
+    if repo.owner.login == repo_owner and repo.name.startswith(repo_prefix):
+        return True
+    return False
+
+
 def get_repo_list(user, args):
     repo_owner, repo_prefix = args['prefix'].split('/')
     repos = []
     for repo in user.get_user().get_repos():
-        if repo.owner.login == repo_owner and repo.name.startswith(repo_prefix):
+        if check_prefix(repo, args):
             repos.append(repo)
 
     return repos
@@ -28,7 +33,7 @@ def get_logins(args, table):
 
 
 def parse_repo(args, table):
-    auth = Auth.Token(TOKEN)
+    auth = Auth.Token(args['token_file'])
     g = Github(auth=auth)
     logins = get_logins(args, table)
     repos = get_repo_list(g, args)
@@ -56,8 +61,8 @@ def parse_repo(args, table):
             eng_name = content.name[index + 1:] if index != -1 else content.name
             ru_name, description = args['works_structure'].get(eng_name, eng_name)
 
-            works[login].append(Work(eng_name=eng_name, ru_name=ru_name, description=description,
-                                     code=code))
+            works[login].append(Work(eng_name=eng_name, ru_name=ru_name,
+                                     description=description, code=code))
 
     g.close()
     return works

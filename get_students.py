@@ -1,4 +1,4 @@
-from Student import Student
+from classes import Student
 
 
 def get_students(works, args, table):
@@ -15,4 +15,3 @@ def get_students(works, args, table):
                                 github=login, works=works[login]))
 
     return students
-

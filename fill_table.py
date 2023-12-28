@@ -1,5 +1,3 @@
-from Student import Student
-from Work import Work
 import csv
 import os
 
@@ -13,7 +11,8 @@ def code_to_string(work):
 
 
 def check_out_name(name):
-    if name.endswith('.csv'): return name
+    if name.endswith('.csv'):
+        return name
     return name + '.csv'
 
 
