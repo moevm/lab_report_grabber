@@ -1,0 +1,60 @@
+2024-01-24 05:41:47,298 - INFO: Run
+2024-01-24 05:41:47,299 - INFO: Parse works structure
+2024-01-24 05:41:47,299 - INFO: Parse gh token
+2024-01-24 05:41:47,299 - INFO: Parse students table
+2024-01-24 05:41:47,300 - INFO: Parse repo
+2024-01-24 05:41:47,300 - INFO: Checking repos with names:[['moevm', 'cs-2023-3381'], ['moevm', 'cs-2023-3385'], ['moevm', 'cs-2023-3384'], ['moevm', 'cs-2023-3341'], ['moevm', 'cs-2023-3342'], ['moevm', 'cs-2023-3343'], ['moevm', 'cs-2023-3382'], ['moevm', 'cs-2023-3344'], ['moevm', 'cs-2023-3388'], ['moevm', 'cs-2023-3383']]
+2024-01-24 05:41:48,178 - INFO: Repos names:['moevm/cs-2023-3388']
+2024-01-24 05:41:51,246 - INFO: Current student login: artyush1. Work name: lb1
+2024-01-24 05:41:53,585 - INFO: Current student login: neleqvid. Work name: lb1
+2024-01-24 05:41:55,838 - INFO: Current student login: basikvaleria. Work name: lb1
+2024-01-24 05:41:57,989 - INFO: Current student login: basikvaleria. Work name: lb2
+2024-01-24 05:42:00,036 - INFO: Current student login: basikvaleria. Work name: lb3
+2024-01-24 05:42:02,183 - INFO: Current student login: 3388bennerviktoria. Work name: lb1
+2024-01-24 05:42:04,231 - INFO: Current student login: 3388bennerviktoria. Work name: lb3
+2024-01-24 05:42:06,692 - INFO: Current student login: rendex451. Work name: lb1
+2024-01-24 05:42:08,740 - INFO: Current student login: rendex451. Work name: lb3
+2024-01-24 05:42:10,890 - INFO: Current student login: glebovaviktoria. Work name: lb2
+2024-01-24 05:42:12,939 - INFO: Current student login: glebovaviktoria. Work name: lb3
+2024-01-24 05:42:19,107 - INFO: Current student login: 3388kulachdaniil. Work name: lb2
+2024-01-24 05:42:21,436 - INFO: Current student login: 3388kulachdaniil. Work name: lb3
+2024-01-24 05:42:23,793 - INFO: Current student login: leksinmaksim. Work name: lb1
+2024-01-24 05:42:26,557 - INFO: Current student login: leksinmaksim. Work name: lb2
+2024-01-24 05:42:28,605 - INFO: Current student login: veronika14may. Work name: lb1
+2024-01-24 05:42:30,649 - INFO: Current student login: postusername. Work name: lb1
+2024-01-24 05:42:32,804 - INFO: Current student login: postusername. Work name: lb2
+2024-01-24 05:42:34,851 - INFO: Current student login: postusername. Work name: lb3
+2024-01-24 05:42:37,000 - INFO: Current student login: poliakovgeorgii3388. Work name: lb1
+2024-01-24 05:42:39,020 - INFO: Current student login: poliakovgeorgii3388. Work name: lb2
+2024-01-24 05:42:41,404 - INFO: Current student login: poliakovgeorgii3388. Work name: lb3
+2024-01-24 05:42:43,452 - INFO: Current student login: piankov-michail. Work name: lb1
+2024-01-24 05:42:45,602 - INFO: Current student login: piankov-michail. Work name: lb2
+2024-01-24 05:42:47,557 - INFO: Current student login: piankov-michail. Work name: lb3
+2024-01-24 05:42:49,900 - INFO: Current student login: zkarajaz. Work name: lb1
+2024-01-24 05:42:52,358 - INFO: Current student login: zkarajaz. Work name: lb2
+2024-01-24 05:42:54,324 - INFO: Current student login: mikelazdotpy. Work name: lb1
+2024-01-24 05:42:56,175 - INFO: Current student login: mikelazdotpy. Work name: lb2
+2024-01-24 05:42:58,094 - INFO: Current student login: mikelazdotpy. Work name: lb3
+2024-01-24 05:43:00,244 - INFO: Current student login: alexander-snigirev. Work name: lb1
+2024-01-24 05:43:02,395 - INFO: Current student login: alexander-snigirev. Work name: lb2
+2024-01-24 05:43:04,443 - INFO: Current student login: eugenetimoshuk. Work name: lb1
+2024-01-24 05:43:06,491 - INFO: Current student login: eugenetimoshuk. Work name: lb2
+2024-01-24 05:43:08,540 - INFO: Current student login: borl1setrunov. Work name: lb3
+2024-01-24 05:43:08,542 - INFO: Add student: artyush1, Атоян Артюш, 3388
+2024-01-24 05:43:08,543 - INFO: Add student: neleqvid, Баранов Дмитрий Артемович, 3388
+2024-01-24 05:43:08,543 - INFO: Add student: basikvaleria, Басик Валерия Витальевна, 3388
+2024-01-24 05:43:08,543 - INFO: Add student: 3388bennerviktoria, Беннер Виктория Александровна, 3388
+2024-01-24 05:43:08,543 - INFO: Add student: glebovaviktoria, Глебова Виктория Сергеевна, 3388
+2024-01-24 05:43:08,543 - INFO: Add student: rendex451, Дубровин Данила Николаевич, 3388
+2024-01-24 05:43:08,544 - INFO: Add student: 3388kulachdaniil, Кулач Даниил Владимирович, 3388
+2024-01-24 05:43:08,544 - INFO: Add student: leksinmaksim, Лексин Максим Васильевич, 3388
+2024-01-24 05:43:08,544 - INFO: Add student: postusername, Павлов Андрей Романович, 3388
+2024-01-24 05:43:08,544 - INFO: Add student: veronika14may, Майская Вероника Алексеевна, 3388
+2024-01-24 05:43:08,544 - INFO: Add student: poliakovgeorgii3388, Поляков Георгий Андреевич, 3388
+2024-01-24 05:43:08,544 - INFO: Add student: piankov-michail, Пьянков Михаил Феликсович, 3388
+2024-01-24 05:43:08,544 - INFO: Add student: zkarajaz, Раутио Игорь Андреевич, 3388
+2024-01-24 05:43:08,544 - INFO: Add student: mikelazdotpy, Сабалиров Мухаммад Заурович, 3388
+2024-01-24 05:43:08,545 - INFO: Add student: alexander-snigirev, Снигирев Александр Александрович, 3388
+2024-01-24 05:43:08,545 - INFO: Add student: eugenetimoshuk, Тимошук Евгений Алексеевич, 3388
+2024-01-24 05:43:08,545 - INFO: Add student: borl1setrunov, Трунов Борис Геннадьевич, 3388
+2024-01-24 05:43:08,545 - INFO: Write out table

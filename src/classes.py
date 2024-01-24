@@ -1,0 +1,29 @@
+class Student:
+    def __init__(self, full_name: str, group: str, github: str, works: list):
+        self.full_name = full_name
+        self.group = group
+        self.github = github
+        self.works = works
+
+    def get_fields(self):
+        fields = []
+        for work in self.works:
+            fields.append([self.full_name, self.group, work.ru_name,
+                           work.description, work.code_to_string()])
+
+        return fields
+
+
+class Work:
+    def __init__(self, eng_name: str, ru_name: str, description: str, code: dict):
+        self.eng_name = eng_name
+        self.ru_name = ru_name
+        self.description = description
+        self.code = code
+
+    def code_to_string(self):
+        code = ""
+        for file_name in self.code:
+            code += f"{file_name}:\n\n{self.code[file_name]}\n\n"
+
+        return code

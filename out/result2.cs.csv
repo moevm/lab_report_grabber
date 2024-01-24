@@ -1,0 +1,1573 @@
+full_name,group,work_name,description,code
+Атоян Артюш,3388,лаба 1, Введение,"main.py:
+
+import numpy as np
+
+
+def check_crossroad(robot,A,B,C,D):
+    return (robot[0]>=A[0]) and  (robot[0]<=B[0]) and (robot[1]>=A[1]) and  (robot[1]<=D[1])
+
+def check_collision(M):
+    cross = []
+    N = M.shape[0]
+    for i in range(N):
+        for j in range(N):
+            if i!=j:
+                a = np.array([[M[i][0], M[i][1]],[M[j][0], M[j][1]]])
+                det = np.linalg.det(a)
+                if det!=0:
+                    cross.append((i,j))
+    return cross
+    
+def check_path(points_list):    
+    s = 0
+    N = len(points_list)
+    for i in range(N-1):
+        a = points_list[i]
+        b = points_list[i+1]
+        l = ((a[0]-b[0])**2 + (a[1]-b[1])**2)**0.5
+        s+=l
+    return round(s,2)
+    
+
+"
+Баранов Дмитрий Артемович,3388,лаба 1, Введение,"main.py:
+
+import numpy 
+from numpy import linalg 
+
+def check_crossroad(robot, point1, point2, point3, point4):
+    return (min(point1[0], point2[0])<=robot[0]) and (max(point1[0], point2[0])>=robot[0]) and (min(point2[1], point3[1])<=robot[1]) and ((max(point2[1],point3[1]))>=robot[1])
+
+def check_collision(ndarray):
+    arr=[]
+    for i in range(len(ndarray)):
+        for j in range(i+1, len(ndarray)):
+            try:
+                linalg.solve(numpy.vstack([ndarray[i][:2], ndarray[j][:2]]), numpy.hstack([ndarray[i][2], ndarray[j][2]]))
+                arr.append((i, j))
+                arr.append((j, i))
+            except:
+                pass
+    return sorted(arr)
+
+def check_path(points_list):
+    Len = 0
+    for i in range(len(points_list)-1):
+        Len += numpy.sqrt((points_list[i+1][0]-points_list[i][0])**2+(points_list[i+1][1]-points_list[i][1])**2)
+    return round(Len, 2)
+
+"
+Басик Валерия Витальевна,3388,лаба 1, Введение,"main_lb1.py:
+
+import numpy as np
+
+def check_crossroad(robot, point1, point2, point3, point4):
+    return((point1[0]<=robot[0]<=point3[0])and(point1[1]<=robot[1]<=point3[1]))
+
+def check_collision(coefficients):
+    res = []
+    for i in range(len(coefficients)):
+        for j in range(i+1, len(coefficients)):
+            matrix = np.array([coefficients[i][:2], coefficients[j][:2]])
+            if np.linalg.det(matrix) != 0:
+                res.append((i, j))
+                res.append((j, i))
+    return sorted(res)
+
+
+def check_path(points_list):
+    res = 0
+    for i in range(len(points_list)-1):
+        pos_1 = points_list[i]
+        pos_2 = points_list[i+1]
+        res += ((pos_2[0]-pos_1[0])**2+(pos_2[1]-pos_1[1])**2)**0.5
+    return round(res,2)
+
+
+"
+Басик Валерия Витальевна,3388,лаба 2, PIL,"main.py:
+
+import numpy as np
+from PIL import Image, ImageDraw
+
+
+# Задача 1
+def user_func(image, x0, y0, x1, y1, fill, width):
+    coordinates = (x0, y0, x1, y1)
+    drawing = ImageDraw.Draw(image)
+    drawing.line(coordinates, fill, width)
+    return image
+
+
+# Задача 2
+def check_coords(image, x0, y0, x1, y1):
+    x, y = image.size
+    return (x >= x1) and (x1 > x0) and (x0 >= 0) and (y >= y1) and (y1 > y0) and (y0 >= 0)
+
+
+def set_black_white(image, x0, y0, x1, y1):
+    if check_coords(image, x0, y0, x1, y1):
+        crop_img = image.crop((x0, y0, x1, y1))
+        crop_img = crop_img.convert(""1"")
+        image.paste(crop_img, (x0, y0))
+    return image
+
+
+# Задача 3
+def largestRectangleArea(heights):
+    n, heights, st, ans = len(heights), [0] + heights + [0], [], 0
+    for i in range(n + 2):
+        while st and heights[st[-1]] > heights[i]:
+            ans = max(ans, heights[st.pop(-1)] * (i - st[-1] - 1))
+        st.append(i)
+    return ans
+
+
+def check_sqr(x, pixel, sqr, max_sqr, n, ans, coordinates):
+    for y in range(len(pixel[x])):
+        if n <= pixel[x][y]:
+            sqr += n
+        if y == len(pixel[x]) - 1 or pixel[x][y + 1] < n:
+            if max_sqr < sqr:
+                max_sqr = sqr
+                coordinates = (y - max_sqr // n + 1, x - n + 1, y, x)
+                if max_sqr == ans:
+                    return True, max_sqr, sqr, coordinates
+            sqr = 0
+    return False, max_sqr, sqr, coordinates
+
+
+def find_big_rect(image, old_color):
+    pixel = np.array(image).tolist()
+    for x in range(len(pixel)):
+        for y in range(len(pixel[x])):
+            pixel[x][y] = 1 if pixel[x][y] == list(old_color) else 0
+    pixel = np.array(pixel)
+    heights = [0] * len(pixel[0])
+    ans = 0
+    for x in range(len(pixel)):
+        for y in range(len(pixel[x])):
+            if pixel[x][y] == 0:
+                heights[y] = 0
+            else:
+                heights[y] += 1
+        ans = max(ans, largestRectangleArea(heights))
+    for x in range(1, len(pixel)):
+        for y in range(len(pixel[x])):
+            if pixel[x][y] == 0:
+                pixel[x][y] = 0
+            else:
+                pixel[x][y] += pixel[x - 1][y]
+    max_sqr = 0
+    coordinates = (0, 0, 0, 0)
+    for x in range(len(pixel)):
+        sqr = 0
+        for n in set(pixel[x]):
+            fl, max_sqr, sqr, coordinates = check_sqr(x, pixel, sqr, max_sqr, n, ans, coordinates)
+            if fl:
+                return coordinates
+    return coordinates
+
+
+def find_rect_and_recolor(image, old_color, new_color):
+    coordinates = find_big_rect(image, old_color)
+    res = np.array(image)
+    res[coordinates[1]:coordinates[3] + 1, coordinates[0]:coordinates[2] + 1, :3] = list(new_color)
+    image = Image.fromarray(res)
+    return image
+
+
+
+"
+Басик Валерия Витальевна,3388,лаба 3, Машина Тьюринга,"main.py:
+
+L, R, N = -1, 1, 0
+
+table = {
+    'q1': {'a': ['a', R, 'q2'], 'b': ['b', R, 'q2'], 'c': ['c', R, 'q2'], ' ': [' ', R, 'q1']},
+    'q2': {'a': ['a', R, 'q2'], 'b': ['b', R, 'q2'], 'c': ['c', R, 'q2'], ' ': [' ', L, 'q3']},
+    'q3': {'a': ['a', L, 'q4'], 'b': ['b', L, 'q4'], 'c': ['c', L, 'q4']},
+    'q4': {'a': ['x', R, 'q5'], 'b': ['x', R, 'q6'], 'c': ['x', R, 'q7']},
+    'q5': {'a': ['a', R, 'q9'], 'b': ['b', R, 'q9'], 'c': ['c', R, 'q9'], 'x': ['x', R, 'q5']},
+    'q6': {'a': ['a', R, 'q10'], 'b': ['b', R, 'q10'], 'c': ['c', R, 'q10'], 'x': ['x', R, 'q6']},
+    'q7': {'a': ['a', R, 'q11'], 'b': ['b', R, 'q11'], 'c': ['c', R, 'q11'], 'x': ['x', R, 'q7']},
+    'q8': {'a': ['a', L, 'q8'], 'b': ['b', L, 'q8'], 'c': ['c', L, 'q8'], 'x': ['x', L, 'q12']},
+    'q9': {'a': ['a', R, 'q9'], 'b': ['b', R, 'q9'], 'c': ['c', R, 'q9'], ' ': ['a', L, 'q8']},
+    'q10': {'a': ['a', R, 'q10'], 'b': ['b', R, 'q10'], 'c': ['c', R, 'q10'], ' ': ['b', L, 'q8']},
+    'q11': {'a': ['a', R, 'q11'], 'b': ['b', R, 'q11'], 'c': ['c', R, 'q11'], ' ': ['c', L, 'q8']},
+    'q12': {'a': ['x', R, 'q5'], 'b': ['x', R, 'q6'], 'c': ['x', R, 'q7'], 'x': ['x', L, 'q12'], ' ': [' ', R, 'q13']},
+    'q13': {'x': [' ', R, 'q13'], 'a': ['a', N, 'qT'], 'b': ['b', N, 'qT'], 'c': ['c', N, 'qT']}
+}
+
+memory = list(input())
+buf = [' ' for i in range(30)]
+memory = buf + memory + buf
+state = 'q1'
+index = 0
+states = [state]
+while state != 'qT':
+    current_symbol = memory[index]
+    future = table[state][current_symbol]
+    memory[index] = future[0]
+    index += future[1]
+    state = future[2]
+    states += [state]
+
+print(*memory, sep='')
+
+
+"
+Беннер Виктория Александровна,3388,лаба 1, Введение,"Benner_Viktoriya_lb1.py:
+
+import numpy as np
+
+def check_collision(bot1, bot2):
+    a = np.array([
+        [bot1[0], bot1[1]],
+        [bot2[0], bot2[1]]]
+    )
+    if np.linalg.matrix_rank(a) == 2:
+        vec = np.array([-bot1[2], -bot2[2]])
+        return tuple(np.linalg.solve(a, vec).round(2))
+    else:
+        return None
+
+def check_surface(point1, point2, point3):
+    a = np.vstack((point1, point2, point3))
+    a[0][2] = 1
+    a[1][2] = 1
+    a[2][2] = 1
+    b = np.array([point1[2], point2[2], point3[2]])
+    if np.linalg.matrix_rank(a) == 3:
+        rez = np.linalg.solve(a, b)
+        p = np.round(rez, 2)
+        return p
+    else:
+        return None
+
+def check_rotation(vec, rad):
+    a = np.array([
+        [np.cos(rad), -np.sin(rad), 0],
+        [np.sin(rad), np.cos(rad), 0],
+        [0, 0, 1],
+    ])
+    return np.round(a.dot(vec), 2)
+
+
+"
+Беннер Виктория Александровна,3388,лаба 3, Машина Тьюринга,"Benner_Viktoriya_lb3.py:
+
+L, N, R = -1, 0, 1
+table = {
+""q1"": {'a': ['a', R, ""q2""], 'b': ['b', R, ""q2""], 'c': ['c', R, ""q2""], ' ': [' ', R, ""q1""]},
+""q2"": {'a': ['a', R, ""q2""], 'b': ['b', R, ""q2""], 'c': ['c', R, ""q2""], ' ': [' ', L, ""q3""]},
+""q3"": {'a': ['d', R, ""q4""], 'b': ['d', R, ""q5""], 'c': ['d', R, ""q6""], 'd': ['d', L, ""q3""], ' ': [' ', R, ""q8""]},
+""q4"": {'a': ['a', R, ""q4""], 'b': ['b', R, ""q4""], 'c': ['c', R, ""q4""], 'd': ['d', R, ""q4""], ' ': ['a', L, ""q7""]},
+""q5"": {'a': ['a', R, ""q5""], 'b': ['b', R, ""q5""], 'c': ['c', R, ""q5""], 'd': ['d', R, ""q5""], ' ': ['b', L, ""q7""]},
+""q6"": {'a': ['a', R, ""q6""], 'b': ['b', R, ""q6""], 'c': ['c', R, ""q6""], 'd': ['d', R, ""q6""], ' ': ['c', L, ""q7""]},
+""q7"": {'a': ['a', L, ""q7""], 'b': ['b', L, ""q7""], 'c': ['c', L, ""q7""], 'd': ['d', L, ""q3""]},
+""q8"": {'a': ['a', N, ""q9""], 'b': ['b', N, ""q9""], 'c': ['c', N, ""q9""], 'd': [' ', R, ""q8""]}
+}
+
+input_str = input()
+tape = list('  ' + input_str + '                ')
+state = ""q1""
+index = 0
+
+while state != ""q9"":
+    symbol = tape[index]
+    next_state = table[state][symbol]
+    tape[index] = next_state[0]
+    index += next_state[1]
+    state = next_state[2]
+
+print("""".join(tape))
+
+"
+Глебова Виктория Сергеевна,3388,лаба 2, PIL,"main_lb2.py:
+
+import numpy as np
+import PIL
+from PIL import Image, ImageDraw
+from collections import Counter
+
+
+def triangle(img, x0, y0, x1, y1, x2, y2, thickness, color, fill_color):
+    drawing = ImageDraw.Draw(img)
+    if fill_color == None:
+        drawing.polygon([(x0,y0), (x1, y1), (x2,y2)], fill=None, outline=tuple(color), width=thickness)
+    else:
+        drawing.polygon([(x0,y0), (x1, y1), (x2,y2)], fill=tuple(fill_color), outline=tuple(color), width=thickness)
+    return img
+
+
+def change_color(img, color):
+    img1 = img
+    x, y = img.size
+    count_pix = Counter(img1.getdata())
+    max_color = max(count_pix, key=count_pix.get)
+    drawing = ImageDraw.Draw(img1)
+    for i in range(x):
+        for j in range(y):
+            if img1.getpixel((i, j)) == max_color:
+                drawing.point((i, j), tuple(color))
+    return img1
+
+
+def collage(img, N, M):
+    width, height = img.size
+    img1 = Image.new(""RGB"", (width * M, height * N), 'white')
+    width1, height1 = img1.size
+    for i in range(0, width1, width):
+        for j in range(0, height1, height):
+            img1.paste(img, (i, j))
+    return img1
+
+
+"
+Глебова Виктория Сергеевна,3388,лаба 3, Машина Тьюринга,"main_lb3.py:
+
+L, R, N = -1, 1, 0
+table = {
+ 'q1': {'a': ['a', R, 'q2'], 'b': ['b', R, 'q3'], 'c': ['c', R,
+'q2'], ' ': [' ', R, 'q1']},
+ 'q2': {'a': ['a', R, 'q2'], 'b': ['b', R, 'q3'], 'c': ['c', R,
+'q2'], ' ': [' ', L, 'q4']},
+ 'q3': {'a': ['', R, 'q5'], 'b': ['', R, 'q5'], 'c': ['', R,
+'q5'], ' ': [' ', L, 'q5']},
+ 'q4': {'a': ['a', L, 'q4'], 'c': ['c', L, 'q4'], ' ': [' ', R,
+'q5']},
+ 'q5': {'a': ['', N, 'q0'], 'b': ['', N, 'q0'], 'c': ['', N,
+'q0'], ' ': [' ', N, 'q0']},
+}
+memory = list(input())
+state = 'q1'
+ind = 0
+while state != 'q0':
+    act = table[state][memory[ind]]
+    memory[ind] = act[0]
+    ind += act[1]
+    state = act[2]
+print(''.join(memory))
+
+
+"
+Дубровин Данила Николаевич,3388,лаба 1, Введение,"main_lb1.py:
+
+import numpy as np
+
+
+def check_collision(bot1, bot2):
+    matrix_bots = np.vstack((bot1, bot2))
+    vector = np.array([-x for x in (matrix_bots[:, -1])])
+    matrix_cf = matrix_bots[:, 0:2]
+    if check_matrix(matrix_cf):
+        return tuple(round(x, 2) for x in np.linalg.solve(matrix_cf, vector))
+    else:
+        return None
+
+
+def check_surface(point1, point2, point3):
+    matrix_cf = np.vstack((point1, point2, point3))
+    vector = np.array([x for x in (matrix_cf[:, -1])])
+    matrix_cf = np.hstack((matrix_cf[:, 0:1], matrix_cf[:, 1:2], np.array([[1], [1], [1]])))
+    if check_matrix(matrix_cf):
+        return np.array([round(x, 2) for x in np.linalg.solve(matrix_cf, vector)])
+    else:
+        return None
+
+
+def check_rotation(vec, rad):
+    rotation_z = np.array([[np.cos(rad), -np.sin(rad), 0],
+                           [np.sin(rad), np.cos(rad), 0],
+                           [0, 0, 1]])
+    return np.array([round(x,2) for x in np.dot(rotation_z, vec)])
+
+
+def check_matrix(matrix):
+    return (np.linalg.matrix_rank(matrix)) == (len(matrix[0]))
+
+
+"
+Дубровин Данила Николаевич,3388,лаба 3, Машина Тьюринга,"main.py:
+
+R, L, N = 1, -1, 0
+table = {
+    ""q1"": {""a"": (""a"", N, ""q2""), ""b"": (""b"", N, ""q2""), ""c"": (""c"", N, ""q2""), "" "": ("" "", R, ""q1"")},
+    ""q2"": {""a"": (""*"", L, ""q3""), ""b"": (""*"", L, ""q4""), ""c"": (""*"", L, ""q5""),"" "": ("" "", L, ""q7""), ""*"": (""*"", R, ""q2"")},
+    ""q3"": {""a"": (""a"", L, ""q3""), ""b"": (""b"", L, ""q3""), ""c"": (""c"", L, ""q3""), "" "": (""a"", R, ""q6""), ""*"": (""*"", L, ""q3"")},
+    ""q4"": {""a"": (""a"", L, ""q4""), ""b"": (""b"", L, ""q4""), ""c"": (""c"", L, ""q4""), "" "": (""b"", R, ""q6""), ""*"": (""*"", L, ""q4"")},
+    ""q5"": {""a"": (""a"", L, ""q5""), ""b"": (""b"", L, ""q5""), ""c"": (""c"", L, ""q5""), "" "": (""c"", R, ""q6""), ""*"": (""*"", L, ""q5"")},
+    ""q6"": {""a"": (""a"", R, ""q6""), ""b"": (""b"", R, ""q6""), ""c"": (""c"", R, ""q6""), "" "": ("" "", L, ""q7""), ""*"": (""*"", R, ""q2"")},
+    ""q7"": {""a"": (""a"", N, ""q8""), ""b"": (""b"", N, ""q8""), ""c"": (""c"", N, ""q8""), ""*"": ("" "", L, ""q7"")}
+}
+
+memory = 13 * ["" ""] + list(input())
+index = 0
+state = ""q1""
+state_table = [""q1""]
+
+while (state != ""q8""):
+    values = table[state][memory[index]]
+    state_table.append(values[2])
+    memory[index] = values[0]
+    index += values[1]
+    state = state_table[-1]
+
+print("""".join(memory))
+
+"
+Кулач Даниил Владимирович,3388,лаба 2, PIL,"main_lb2.py:
+
+import numpy as np
+from PIL import Image, ImageDraw
+
+# Задача 1
+def triangle(img, x0, y0, x1, y1, x2, y2, thickness, color,
+fill_color):
+    drawing = ImageDraw.Draw(img)
+    if fill_color is None:
+        drawing.polygon(((x0, y0), (x1, y1), (x2, y2)), fill=None,
+outline=tuple(color), width=thickness)
+    else:
+        drawing.polygon(((x0, y0), (x1, y1), (x2, y2)),
+fill=tuple(fill_color), outline=tuple(color), width=thickness)
+    return img
+    
+# Задача 2
+def change_color(img, color):
+    color_count = {}
+    img1 = img.copy()
+    pixels = img1.load()
+    for i in range(img1.size[0]):
+        for j in range(img1.size[1]):
+            if pixels[i, j] not in color_count:
+                color_count[pixels[i, j]] = 1
+            else:
+                color_count[pixels[i, j]] += 1
+    max_count_color = max(color_count, key=color_count.get)
+    for i in range(img1.size[0]):
+        for j in range(img1.size[1]):
+            if pixels[i, j] == max_count_color:
+                pixels[i, j] = tuple(color)
+    return img1
+    
+# Задача 3
+def collage(img, N, M):
+    width_img = img.size[0]
+    height_img = img.size[1]
+    img_new = Image.new(""RGB"", (width_img * M, height_img * N), (0,
+0 ,0))
+    new_width = img_new.size[0]
+    new_height = img_new.size[1]
+    for i in range(0, new_width, width_img):
+        for j in range(0, new_height, height_img):
+            img_new.paste(img, (i, j))
+    return img_new
+
+
+"
+Кулач Даниил Владимирович,3388,лаба 3, Машина Тьюринга,"main.py:
+
+def turing(tape):
+    table = {
+        'q1': {
+            ' ': [' ', 1, 'q1'],
+            'a': ['a', 1, 'q2'],
+            'b': ['b', 1, 'q2'],
+            'c': ['c', 1, 'q2']
+        },
+        'q2': {
+            ' ': [' ', -1, 'q3'],
+            'a': ['a', 1, 'q2'],
+            'b': ['b', 1, 'q2'],
+            'c': ['c', 1, 'q2']
+        },
+        'q3': {
+            'a': ['a', -1, 'q4'],
+            'b': ['b', -1, 'q3'],
+            'c': ['c', -1, 'q3']
+        },
+        'q4': {
+            'a': ['a', -1, 'q5'],
+            'b': ['b', -1, 'q3'],
+            'c': ['c', -1, 'q3']
+        },
+        'q5': {
+            'a': ['a', 1, 'q6'],
+            'b': ['b', 1, 'q9'],
+            'c': ['c', 1, 'q12']
+        },
+        'q6': {
+            'a': ['a', 1, 'q7']
+        },
+        'q7': {
+            'a': ['a', 1, 'q8']
+        },
+        'q8': {
+            'a': ['a', 0, 'q0'],
+            'b': ['a', 0, 'q0'],
+            'c': ['a', 0, 'q0'],
+            ' ': ['a', 0, 'q0']
+        },
+        'q9': {
+            'a': ['a', 1, 'q10']
+        },
+        'q10': {
+            'a': ['a', 1, 'q11']
+        },
+        'q11': {
+            'a': ['b', 0, 'q0'],
+            'b': ['b', 0, 'q0'],
+            'c': ['b', 0, 'q0'],
+            ' ': ['b', 0, 'q0']
+        },
+        'q12': {
+            'a': ['a', 1, 'q13']
+        },
+        'q13': {
+            'a': ['a', 1, 'q14']
+        },
+        'q14': {
+            'a': ['c', 0, 'q0'],
+            'b': ['c', 0, 'q0'],
+            'c': ['c', 0, 'q0'],
+            ' ': ['c', 0, 'q0']
+        },
+    }
+    state = 'q1'
+    i = 0
+    while state != 'q0':
+        tape[i], move, state = table[state][tape[i]]
+        i += move
+if __name__ == '__main__':
+    tape = list(input())
+    turing(tape)
+    print(''.join(tape))
+
+
+"
+Лексин Максим Васильевич,3388,лаба 1, Введение,"main.py:
+
+import math
+import numpy as np
+
+def check_crossroad(robot, point1, point2, point3, point4):
+    return (point1[0] <= robot[0] <= point2[0]) and (point1[1] <= robot[1] <= point4[1])
+
+def solve_system(bim, bam):
+    coefficients = np.array([bim[:2], bam[:2]])
+    const = np.array([-bim[-1], -bam[-1]])
+    try:
+        solution = np.linalg.solve(coefficients, const)
+        return True
+    except:
+        return False
+
+def check_collision(ndarray):
+    ans = []
+    for i in range(ndarray.shape[0]):
+        system_loc = ndarray[i]
+        for j in range(ndarray.shape[0]):
+            if i != j:
+                system_new = ndarray[j]
+                if solve_system(system_loc, system_new):
+                    temp = (i, j)
+                    ans.append(temp)
+    return ans
+
+def check_path(point_list):
+    len_path = 0
+    for i in range(len(point_list) - 1):
+        len_path += math.sqrt((point_list[i+1][0] - point_list[i][0])**2 +
+                (point_list[i+1][1] - point_list[i][1])**2)
+    return round(len_path, 2)
+
+
+"
+Лексин Максим Васильевич,3388,лаба 2, PIL,"main.py:
+
+import numpy as np
+from PIL import Image, ImageDraw
+
+def pentagram(img, x, y, r, thickness, color):
+    drawing = ImageDraw.Draw(img)
+    x1, y1, x2, y2 = x-r, y-r, x+r, y+r
+    coordinates = []
+    drawing.ellipse(((x1, y1, x2, y2)), fill = None, width = thickness, outline = tuple(color))
+    for i in range(5):
+        phi = (np.pi / 5) * (2 * i + 3 / 2)
+        node_i = (int(x + r * np.cos(phi)), int(y + r * np.sin(phi)))
+        coordinates.append((node_i))
+    coordinates = tuple(coordinates)
+    for i in range(5):
+        drawing.line((coordinates[i], coordinates[(i + 2) % 5]), fill = tuple(color), width = thickness)
+    return img
+    
+
+def swap(img, x0, y0, x1, y1, width):
+    square1 = img.copy().crop((x0, y0, x0 + width, y0 + width)).rotate(-90)
+    square2 = img.copy().crop((x1, y1, x1 + width, y1 + width)).rotate(-90)
+    result = img.copy()
+    result.paste(square2, (x0, y0))
+    result.paste(square1, (x1, y1))
+    return result.rotate(-90)
+
+
+def avg_color(img, x0, y0, x1, y1):
+    result = img.copy()
+    size = img.size
+    for x in range(x0, x1 + 1):
+        for y in range(y0, y1 + 1):
+            sum_rgb = [0, 0, 0]
+            pixels_around  = ((x + 1, y - 1), (x + 1, y), (x + 1, y + 1), (x, y - 1),(x, y + 1), (x - 1, y - 1), (x - 1, y), (x - 1, y + 1))
+            pixels_around = tuple(filter(lambda c: (0 <= c[0] <= size[0] - 1) and (0 <= c[1] <= size[1] - 1), pixels_around))
+            for i in pixels_around:
+                pixel = img.getpixel(i)
+                for j in range(3):
+                    sum_rgb[j] += pixel[j]
+            length = len(pixels_around)
+            new_color = (int(sum_rgb[0] / length), int(sum_rgb[1] / length), int(sum_rgb[2] / length))
+            result.putpixel((x, y), new_color)
+    return result
+
+"
+Павлов Андрей Романович,3388,лаба 1, Введение,"Pavlov_Andrei_lb1.py:
+
+import numpy as np
+
+
+def check_crossroad(robot, point1, point2, point3, point4):
+    return (point1[0] <= robot[0] <= point3[0]) and (point1[1] <= robot[1] <= point3[1])
+
+
+def check_collision(coefs):
+    Amatrix = np.delete(coefs, 2, 1)
+    out = []
+    for i in range(Amatrix.shape[0]):
+        for j in range(Amatrix.shape[0]):
+            linear_system = np.vstack([Amatrix[i], Amatrix[j]])
+            if np.linalg.det(linear_system) != 0:
+                out.append((i, j))
+    return sorted(out)
+
+
+def check_path(path):
+    S = 0
+    for i in range(len(path) - 1):
+        S += np.sqrt((path[i][0] - path[i + 1][0])**2 + (path[i][1] - path[i + 1][1])**2)
+    return round(S, 2)
+
+
+
+"
+Павлов Андрей Романович,3388,лаба 2, PIL,"main.py:
+
+import os
+os.environ['OPENBLAS_NUM_THREADS'] = '1'
+
+import PIL
+import numpy as np
+from PIL import Image, ImageDraw
+
+
+def swap(img, x0, y0, x1, y1, width):
+    img_res = img.copy()
+    piece1 = img_res.crop((x0, y0, x0 + width, y0 + width)).rotate(-90)
+    piece2 = img_res.crop((x1, y1, x1 + width, y1 + width)).rotate(-90)
+    img_res.paste(piece1, (x1, y1))
+    img_res.paste(piece2, (x0, y0))
+    img_res = img_res.rotate(-90)
+    return img_res
+
+def end_of_img(xy, shape):
+    return (xy[0] >= 0) and (xy[0] < shape[0]) and (xy[1] >= 0) and (xy[1] < shape[1])
+
+def avg_color(img, x0, y0, x1, y1):
+    img_res = img.copy()
+    data = img_res.load()
+    img_shape = img_res.size
+    
+    for x in range(x0, x1+1):
+        for y in range(y0, y1+1):
+            pixels = [(x-1, y-1), (x, y-1), (x+1, y-1), (x+1, y), (x+1, y+1), (x, y+1), (x-1, y+1), (x-1, y)]
+            pixels = [pixel for pixel in pixels if end_of_img(pixel, img_shape)]
+            avg = np.array(list(map(img.getpixel, pixels)))
+            result = avg.mean(axis=0)
+            data[x, y] = (int(result[0]), int(result[1]), int(result[2]))
+    return img_res
+
+def pentagram(img, x, y, r, thickness, color):
+    drawing = ImageDraw.Draw(img)
+    xy = [x-r, y-r, x+r, y+r]
+    drawing.ellipse(xy, None, tuple(color), thickness)
+    for i in range(0, 5):
+        alpha = (np.pi / 5) * (2 * i + 3 / 2)
+        Xstart = int(x + r * np.cos(alpha))
+        Ystart = int(y + r * np.sin(alpha))
+        end_of_line = (np.pi / 5) * (2 * (i+2) + 3 / 2)
+        Xend = int(x + r * np.cos(end_of_line))
+        Yend = int(y + r * np.sin(end_of_line))
+        cords = ((Xstart, Ystart), (Xend, Yend))
+        drawing.line(cords, tuple(color), thickness)
+    return img
+
+
+
+"
+Павлов Андрей Романович,3388,лаба 3, Машина Тьюринга,"main.py:
+
+R, L, N = 1, -1, 0
+table = { 
+    'q0': {'a': ['a', R, 'q2'], 'b':['b', R, 'q1'], 'c':['c', R, 'q1'], ' ':[' ', R, 'q0']},
+    'q1': {'a': ['a', R, 'q2'], 'b': ['b', R, 'q1'], 'c': ['c', R, 'q1'], ' ': [' ', N, 'qE']},
+    'q2': {'a': ['a', L, 'q3'], 'b': ['b', L, 'q4'], 'c': ['c', L, 'q5'], ' ': [' ', L, 'q3']},
+    'q3': {'a': ['a', L, 'q3'], 'b': ['b', L, 'q3'], 'c': ['c', L, 'q3'], ' ': [' ', R, 'q6']},
+    'q4': {'a': ['a', L, 'q4'], 'b': ['b', L, 'q4'], 'c': ['c', L, 'q4'], ' ': [' ', R, 'q7']},
+    'q5': {'a': ['a', L, 'q5'], 'b': ['b', L, 'q5'], 'c': ['c', L, 'q5'], ' ': [' ', R, 'q8']},
+    'q6': {'a': ['a', R, 'q6'], 'b': ['b', R, 'q6'], 'c': ['c', L, 'q9'], ' ': [' ', N, 'qE']},
+    'q7': {'a': ['a', R, 'q7'], 'b': ['b', R, 'q7'], 'c': ['c', L, 'q10'], ' ': [' ', N, 'qE']},
+    'q8': {'a': ['a', R, 'q8'], 'b': ['b', R, 'q8'], 'c': ['c', L, 'q11'], ' ': [' ', N, 'qE']},
+    'q9': {'a': ['a', N, 'qE'], 'b': ['a', N, 'qE'], 'c': ['a', N, 'qE'], ' ': ['a', N, 'qE']},
+    'q10': {'a': ['b', N, 'qE'], 'b': ['b', N, 'qE'], 'c': ['b', N, 'qE'], ' ': ['b', N, 'qE']},
+    'q11': {'a': ['c', N, 'qE'], 'b': ['c', N, 'qE'], 'c': ['c', N, 'qE'], ' ': ['c', N, 'qE']},
+}
+memory = list(input())
+q = 'q0'
+position = 0
+
+while q != 'qE':
+    symbol, step, state = table[q][memory[position]]
+    memory[position] = symbol
+    position += step
+    q = state
+print(*memory, sep='')
+
+
+"
+Майская Вероника Алексеевна,3388,лаба 1, Введение,"main_lb1.py:
+
+import numpy as np
+import math
+
+def check_collision(bot1, bot2):
+    a1, b1, c1 = bot1[0], bot1[1], bot1[2]
+    a2, b2, c2 = bot2[0], bot2[1], bot2[2]
+
+    try:
+        y = (a2*c1-c2*a1)/(b2*a1-a2*b1)
+        x = (-c1 - b1*y)/a1
+        return (round(x,2),round(y,2))
+    except Exception as e:
+        return None
+
+def check_surface(point1, point2, point3):
+    x1, x2, x3 = point1[0], point2[0], point3[0]
+    y1, y2, y3 = point1[1], point2[1], point3[1]
+
+    matrix = np.array([
+        [x1, y1, 1],
+        [x2, y2, 1],
+        [x3, y3, 1]
+    ])
+    vec = np.array([point1[2],point2[2],point3[2]])
+
+    try:
+        result = np.array([round(x, 2) for x in np.linalg.solve(matrix, vec)])
+        return result
+    except Exception as e:
+        return None
+
+
+def check_rotation(vec, rad):
+    x_old, y_old, z_old = vec[0], vec[1], vec[2]
+    x_new = x_old*math.cos(rad) - y_old*math.sin(rad)
+    y_new = x_old*math.sin(rad) + y_old*math.cos(rad)
+
+    return np.array([round(x_new,2), round(y_new,2), round(z_old,2)])
+
+"
+Поляков Георгий Андреевич,3388,лаба 1, Введение,"main_lb1.py:
+
+import numpy as np
+from numpy import linalg
+
+def check_crossroad(robot, point1, point2, point3, point4):
+    return (point1[0]<=robot[0]<=point2[0] and point2[1]<=robot[1]<=point3[1])
+
+
+def check_collision(coefficients):
+    arr_collaps = []
+    for i in range(len(coefficients)):
+        for j in range(len(coefficients)):
+            if coefficients[i][0]/coefficients[i][1] != coefficients[j][0]/coefficients[j][1]:
+                arr_collaps.append((i,j))
+    return arr_collaps
+
+
+def check_path(points_list):
+    sum_len = 0
+    for i in range(len(points_list) - 1):
+        x1, y1 = points_list[i]
+        x2, y2 = points_list[i + 1]
+        vector = (x2 - x1, y2 - y1)
+        sum_len+=linalg.norm(vector)
+    return round(sum_len,2)
+
+
+"
+Поляков Георгий Андреевич,3388,лаба 2, PIL,"main.py:
+
+from PIL import Image, ImageDraw
+
+def triangle(img, x0, y0, x1, y1, x2, y2, thickness, color, fill_color):
+    drawing = ImageDraw.Draw(img)
+    if fill_color == None:
+        drawing.polygon([(x0,y0), (x1, y1), (x2,y2)], fill = None, outline = tuple(color), width=thickness)
+    else:
+        drawing.polygon([(x0,y0), (x1, y1), (x2,y2)], fill = tuple(fill_color), outline = tuple(color), width=thickness)
+    return img
+
+
+def change_color(img, color):
+    img_new = img
+    x = img.size[0]
+    y = img.size[1]
+    count_pix_color = dict()
+    data_pixels = list(img.getdata())
+    for pix in data_pixels:
+        if pix not in count_pix_color:
+            count_pix_color[pix] = 1
+        else:
+            count_pix_color[pix]+=1
+    max_count_color = max(count_pix_color, key = count_pix_color.get)
+    drawing = ImageDraw.Draw(img_new)
+    for i in range (x):
+        for j in range (y):
+            if img_new.getpixel((i, j)) == max_count_color:
+                drawing.point((i, j), tuple(color))
+    return img_new
+
+
+def collage(img, N, M):
+    x = img.size[0]
+    y = img.size[1]
+    img_new = Image.new(""RGB"", (x * M, y * N), ""white"")
+    x_new = img_new.size[0]
+    y_new = img_new.size[1]
+    for i in range(0, x_new, x):
+        for j in range (0, y_new, y):
+            img_new.paste(img, (i, j))
+    return img_new
+
+
+"
+Поляков Георгий Андреевич,3388,лаба 3, Машина Тьюринга,"main_lb3.py:
+
+table = {'q1': {'a': ['a', 1, 'q2'], 'b': ['b', 1, 'q3'], 'c': ['c', 1, 'q2'], ' ': [' ', 1, 'q1']},
+    'q2': {'a': ['a', 1, 'q2'], 'b': ['b', 1, 'q3'], 'c': ['c', 1, 'q2'], ' ': [' ', -1, 'q4']},
+    'q3': {'a': ['', 1, 'q5'], 'b': ['', 1, 'q5'], 'c': ['', 1, 'q5'], ' ': [' ', -1, 'q5']},
+    'q4': {'a': ['a', -1, 'q4'],  'c': ['c', -1, 'q4'], ' ': [' ', 1, 'q5']},
+    'q5': {'a': ['', 0, 'q0'], 'b': ['', 0, 'q0'], 'c': ['', 0, 'q0'],  ' ': [' ', 0, 'q0']},}
+memory = list(input())
+state = 'q1'
+index = 0
+while state != 'q0':
+    new_value, shift, new_state = table[state][memory[index]]
+    memory[index] = new_value
+    index += shift
+    state = new_state
+print(''.join(memory))
+
+"
+Пьянков Михаил Феликсович,3388,лаба 1, Введение,"main_lb1.py:
+
+import numpy as np
+
+
+def check_crossroad(robot, point1, point2, point3, point4):
+    return all(robot[i] <= max(point1[i], point2[i], point3[i], point4[i]) and robot[i] >= min(point1[i], point2[i], point3[i], point4[i]) for i in range(2))
+
+
+def check_collision(robot_trajectories):
+    uncollised_robots = []
+    for i in range(len(robot_trajectories)):
+        for j in range(len(robot_trajectories)):
+            if i!=j and (robot_trajectories[i][0] / robot_trajectories[i][1] != robot_trajectories[j][0] / robot_trajectories[j][1] or \
+            (robot_trajectories[i][0] / robot_trajectories[i][1] == robot_trajectories[j][0] / robot_trajectories[j][1] and \
+             robot_trajectories[i][2] / robot_trajectories[i][1] == robot_trajectories[j][2]) / robot_trajectories[j][1]):
+                uncollised_robots.append((i,j))
+    return uncollised_robots
+
+
+def check_path(points_list):
+    total_distance = 0
+    for i in range(len(points_list)-1):
+        total_distance += np.linalg.norm(np.array(points_list[i+1]) - np.array(points_list[i]))
+    return np.round(total_distance, 2)
+
+
+"
+Пьянков Михаил Феликсович,3388,лаба 2, PIL,"main_lb2.py:
+
+from PIL import Image, ImageDraw
+from numpy import pi, cos, sin
+import numpy as np
+def check_pixel_position(x, y, width, heigth):
+    return (x>=0 and x < width and y>=0 and y < heigth)
+
+def swap(img, x0,y0,x1,y1,width):
+    copy_img = img.copy()
+    first_img = copy_img.crop((x0, y0, x0+width, y0+width))
+    second_img = copy_img.crop((x1, y1, x1+width, y1+width))
+    first_img = first_img.rotate(-90)
+    second_img = second_img.rotate(-90)
+    copy_img.paste(first_img, (x1, y1))
+    copy_img.paste(second_img, (x0, y0))
+    copy_img = copy_img.rotate(-90)
+    return copy_img
+
+def avg_color(img, x0,y0,x1,y1):
+    copy_img = img.copy()
+    width = img.size[0]
+    heigth = img.size[1]
+    for i in range(x0, min(x1 + 1, img.size[0])):
+        for j in range(y0, min(y1 + 1, img.size[1])):
+            new_color = np.array([0, 0, 0])
+            count = 0
+            for new_i in range(-1, 2):
+                for new_j in range(-1, 2):
+                    if not(new_i == 0 and new_j == 0) and check_pixel_position(i + new_i, j + new_j, width, heigth):
+                        pixel_color = np.array(img.getpixel((i + new_i, j + new_j)))
+                        count +=1
+                        new_color += pixel_color
+                result_color = new_color // count
+            copy_img.putpixel((i, j), tuple(result_color))
+    return copy_img
+
+def pentagram(img, x, y, r, thickness, color):
+    drawing = ImageDraw.Draw(img, ""RGB"")
+    coordinates = ((x - r, y - r), (x + r, y + r))
+    drawing.ellipse(coordinates, fill=None, width=thickness, outline=tuple(color))
+    array_node = []
+    for i in range(5):
+        phi = (pi / 5) * (2 * i + 3 / 2)
+        array_node.append((int(x + r * cos(phi)), int(y + r * sin(phi))))
+    for i in range(5):
+        drawing.line((array_node[i], array_node[(i + 2) % 5]), fill = tuple(color), width = thickness)
+    return img
+
+"
+Пьянков Михаил Феликсович,3388,лаба 3, Машина Тьюринга,"main_lb3.py:
+
+tape = input()
+shifts = {'L': -1, 'N': 0, 'R': 1}
+state = ""q0""
+states = {
+    'q0':{'a': ['a', 'R', 'qa'], 'b': ['b', 'R', 'q0'], 'c': ['c', 'R', 'q0'], ' ':[' ', 'R', 'q0']},
+    'qa':{'a': ['a', 'L', 'qaa'], 'b': ['b', 'L', 'qab'], 'c': ['c', 'L', 'qac'], ' ':[' ', 'L', 'qaa']},
+    'qaa': {'a': ['a', 'L', 'qaa'], 'b': ['b', 'L', 'qaa'], 'c': ['c', 'L', 'qaa'], ' ': [' ', 'R', 'qaaL']},
+    'qab': {'a': ['a', 'L', 'qab'], 'b': ['b', 'L', 'qab'], 'c': ['c', 'L', 'qab'], ' ': [' ', 'R', 'qabL']},
+    'qac': {'a': ['a', 'L', 'qac'], 'b': ['b', 'L', 'qac'], 'c': ['c', 'L', 'qac'], ' ': [' ', 'R', 'qacL']},
+    'qaaL': {'a': ['a', 'R', 'qaaL'], 'b': ['b', 'R', 'qaaL'], 'c': ['c', 'L', 'qaaLc']},
+    'qabL': {'a': ['a', 'R', 'qabL'], 'b': ['b', 'R', 'qabL'], 'c': ['c', 'L', 'qabLc']},
+    'qacL': {'a': ['a', 'R', 'qacL'], 'b': ['b', 'R', 'qacL'], 'c': ['c', 'L', 'qacLc']},
+    'qaaLc': {'a': ['a', 'N', 'qaaLca'], 'b': ['b', 'N', 'qaaLcb'], 'c': ['c', 'N', 'qaaLcc'], ' ': [' ', 'N', 'qaaLc_space' ]},
+    'qabLc': {'a': ['a', 'N', 'qabLca'], 'b': ['b', 'N', 'qabLcb'], 'c': ['c', 'N', 'qabLcc'], ' ': [' ', 'N', 'qabLc_space']},
+    'qacLc': {'a': ['a', 'N', 'qacLca'], 'b': ['b', 'N', 'qacLcb'], 'c': ['c', 'N', 'qacLcc'], ' ': [' ', 'N', 'qacLc_space']},
+}
+
+index = 0
+
+while(not(state in ['qaaLc', 'qabLc', 'qacLc'])):
+    symbol = tape[index]
+    state_data = states[state][symbol]
+    state = state_data[2]
+    index += shifts[state_data[1]]
+
+state_data = states[state][symbol]
+index += shifts[state_data[1]]
+tape = tape[:index] + state_data[2][2] + tape[index+1:]
+
+print(tape)
+
+"
+Раутио Игорь Андреевич,3388,лаба 1, Введение,"Rautio_Igor_lb1.py:
+
+import numpy
+from math import *
+
+
+def check_collision(bot_1, bot_2):
+    b = numpy.concatenate(([bot_1], [bot_2]), axis=0)
+    c = (-1) * b[:, 2]
+    if (numpy.linalg.matrix_rank(b) == 2 and numpy.linalg.matrix_rank(b[:, 0:2]) == 2):
+        result = tuple(round(x, 2) for x in numpy.linalg.solve(b[:, :2], c))
+        return result
+    else:
+        return None
+        
+def check_surface(point_1, point_2, point_3):
+    a = numpy.concatenate(([point_1], [point_2], [point_3]), axis=0)
+    a = numpy.insert(a, 2, 1, axis=1)
+    if (numpy.linalg.matrix_rank(a) == 3 and numpy.linalg.matrix_rank(a[:, 0:3]) == 3):
+        result = numpy.array([round(x, 2) for x in numpy.linalg.solve(a[:, 0:3], a[:, 3])])
+        return result
+    else:
+        return None
+
+def check_rotation(vec, rad):
+    vec = numpy.array([float(x) for x in vec])
+    a, b = vec[0], vec[1]
+    vec[0] = a * cos(rad) - b * sin(rad)
+    vec[1] = b * cos(rad) + a * sin(rad)
+    return numpy.array([round(x, 2) for x in vec])
+
+
+"
+Раутио Игорь Андреевич,3388,лаба 2, PIL,"main.py:
+
+import numpy as np
+from PIL import Image, ImageDraw
+
+
+# Задача 1
+def user_func(image, x0, y0, x1, y1, fill, width):
+    coordinates = (x0, y0, x1, y1)
+    drawing = ImageDraw.Draw(image)
+    drawing.line(coordinates, fill, width)
+    return image
+
+
+# Задача 2
+def check_coords(image, x0, y0, x1, y1):
+    x, y = image.size
+    return (x >= x1) and (x1 > x0) and (x0 >= 0) and (y >= y1) and (y1 > y0) and (y0 >= 0)
+
+
+def set_black_white(image, x0, y0, x1, y1):
+    if check_coords(image, x0, y0, x1, y1):
+        crop_img = image.crop((x0, y0, x1, y1))
+        crop_img = crop_img.convert(""1"")
+        image.paste(crop_img, (x0, y0))
+    return image
+
+
+# Задача 3
+def largestRectangleArea(heights):
+    n, heights, st, ans = len(heights), [0] + heights + [0], [], 0
+    for i in range(n + 2):
+        while st and heights[st[-1]] > heights[i]:
+            ans = max(ans, heights[st.pop(-1)] * (i - st[-1] - 1))
+        st.append(i)
+    return ans
+
+
+def check_sqr(x, pixel, sqr, max_sqr, n, ans, coordinates):
+    for y in range(len(pixel[x])):
+        if n <= pixel[x][y]:
+            sqr += n
+        if y == len(pixel[x]) - 1 or pixel[x][y + 1] < n:
+            if max_sqr < sqr:
+                max_sqr = sqr
+                coordinates = (y - max_sqr // n + 1, x - n + 1, y, x)
+                if max_sqr == ans:
+                    return True, max_sqr, sqr, coordinates
+            sqr = 0
+    return False, max_sqr, sqr, coordinates
+
+
+def find_big_rect(image, old_color):
+    pixel = np.array(image).tolist()
+    for x in range(len(pixel)):
+        for y in range(len(pixel[x])):
+            pixel[x][y] = 1 if pixel[x][y] == list(old_color) else 0
+    pixel = np.array(pixel)
+    heights = [0] * len(pixel[0])
+    ans = 0
+    for x in range(len(pixel)):
+        for y in range(len(pixel[x])):
+            if pixel[x][y] == 0:
+                heights[y] = 0
+            else:
+                heights[y] += 1
+        ans = max(ans, largestRectangleArea(heights))
+    for x in range(1, len(pixel)):
+        for y in range(len(pixel[x])):
+            if pixel[x][y] == 0:
+                pixel[x][y] = 0
+            else:
+                pixel[x][y] += pixel[x - 1][y]
+    max_sqr = 0
+    coordinates = (0, 0, 0, 0)
+    for x in range(len(pixel)):
+        sqr = 0
+        for n in set(pixel[x]):
+            fl, max_sqr, sqr, coordinates = check_sqr(x, pixel, sqr, max_sqr, n, ans, coordinates)
+            if fl:
+                return coordinates
+            else:
+                continue
+    return coordinates
+
+
+def find_rect_and_recolor(image, old_color, new_color):
+    coordinates = find_big_rect(image, old_color)
+    res = np.array(image)
+    res[coordinates[1]:coordinates[3] + 1, coordinates[0]:coordinates[2] + 1, :3] = list(new_color)
+    image = Image.fromarray(res)
+    return image
+
+
+
+
+"
+Сабалиров Мухаммад Заурович,3388,лаба 1, Введение,"main.py:
+
+import numpy as np
+
+
+def check_crossroad(robot, point1, point2, point3, point4):
+    x, y = robot
+    checks = [point2[0] >= x >= point1[0],
+              point4[1] >= y >= point1[1]]
+    return all(checks)
+
+
+def check_collision(coefficients):
+    answer_list = []
+    for i in range(len(coefficients)):
+        for j in range(len(coefficients)):
+            A = np.array([coefficients[i][:2], coefficients[j][:2]])
+            if np.linalg.det(A): answer_list.append((i,j))
+    return answer_list
+
+def distance(point1, point2):
+    return ((point1[0]-point2[0])**2 + (point1[1]-point2[1])**2)**0.5
+
+def check_path(points_list):
+    total_distance = 0
+    for i in range(len(points_list)-1):
+        total_distance += distance(points_list[i], points_list[i+1])
+    return round(total_distance, 2)
+
+
+"
+Сабалиров Мухаммад Заурович,3388,лаба 2, PIL,"main.py:
+
+import numpy as np
+from PIL import Image, ImageDraw
+
+
+def triangle(img, x0, y0, x1, y1, x2, y2, thickness, color, fill_color):
+    fill_color = tuple(fill_color) if fill_color is not None else None
+
+    drawing = ImageDraw.Draw(img)
+    drawing.polygon([(x0, y0), (x1, y1), (x2, y2)], fill_color, tuple(color), thickness)
+    return img
+
+
+def change_color(img, color):
+    color = tuple(color)
+    pixels = list(img.getdata())
+
+    color_count = {x: pixels.count(x) for x in set(pixels)}
+    replacement_color = max(color_count, key=lambda x: color_count[x])
+    new_pixels = [color if pixel == replacement_color else pixel for pixel in pixels]
+
+    changed_color_img = img.copy()
+    changed_color_img.putdata(new_pixels)
+    return changed_color_img
+
+
+def collage(img, N, M):
+    w, h = img.size
+    img_collage = Image.new(""RGB"", (w * M, h * N), 'red')
+
+    for x in range(0, w * M, w):
+        for y in range(0, h * N, h):
+            img_collage.paste(img, (x, y))
+            
+    return img_collage
+
+
+"
+Сабалиров Мухаммад Заурович,3388,лаба 3, Машина Тьюринга,"main.py:
+
+""""""
+Вид ф-ции для состояния
+def qN(cell): #cell - текущая ячейка на ленте
+    ....
+    #V - значение записываемое в текущую ячейку 
+    #S - Сдвиг R N L (1 0 -1)
+    #new_q - состояние в которое перейдет автомат после операции
+    return V, S, new_q
+""""""
+space = ' '
+
+
+def q1(cell):
+    if cell != space: return cell, 0, 2
+    return cell, 1, 1
+
+
+def q2(cell):
+    if cell == space: return cell, -1, 3
+    if cell == 'b': return cell, 1, 5
+    return cell, 1, 2
+
+
+def q3(cell):
+    if cell == space: return cell, 1, 4
+    return cell, -1, 3
+
+
+def q4(cell):
+    return space, 0, 8
+
+
+def q5(cell):
+    if cell == space: return cell, -1, 4
+    return cell, 1, 6
+
+
+def q6(cell):
+    if cell == space: return cell, -1, 4
+    return '', -1, 7
+
+
+def q7(cell):
+    return '', 0, 8
+
+
+def q8(cell):
+    return cell, 0, 8
+
+
+q_dict = {
+    1: q1,
+    2: q2,
+    3: q3,
+    4: q4,
+    5: q5,
+    6: q6,
+    7: q7,
+    8: q8
+}
+
+
+belt = list(input())
+i = 0
+condition = 1
+
+while condition != 8:
+    answer = q_dict[condition](belt[i])
+    belt[i] = answer[0]
+    i += answer[1]
+    condition = answer[2]
+
+
+print(''.join(belt))
+
+
+"
+Снигирев Александр Александрович,3388,лаба 1, Введение,"main_lb1.py:
+
+import numpy as np
+
+
+def check_collision(bot1, bot2):
+    matrix = np.array((bot1[:2], bot2[:2]))
+    vector = np.array((-bot1[2], -bot2[2]))
+    rank = np.linalg.matrix_rank(matrix)
+    if rank != 2:
+        return None
+    else:
+        result = np.linalg.solve(matrix, vector)
+        result = np.around(result, 2)
+        result = tuple(result)
+        return result
+
+
+def check_surface(point1, point2, point3):
+    matrix = np.array([[point1[0], point1[1], 1], [point2[0], point2[1], 1], [point3[0], point3[1], 1]])
+    vector = np.array((point1[2], point2[2], point3[2]))
+    rank = np.linalg.matrix_rank(matrix)
+    if rank != 3:
+        return None
+    else:
+        result = np.linalg.solve(matrix, vector)
+        result = np.around(result, 2)
+        return result
+
+
+def check_rotation(vec, rad):
+    matrix = np.array([[np.cos(rad), -np.sin(rad), 0],[np.sin(rad), np.cos(rad), 0],[0, 0, 1]])
+    result = np.around(np.dot(matrix, vec), 2)
+    return result
+
+
+"
+Снигирев Александр Александрович,3388,лаба 2, PIL,"main_lb2.py:
+
+import os
+os.environ['OPENBLAS_NUM_THREADS'] = '1'
+from PIL import Image, ImageDraw, ImageOps
+import numpy as np
+
+def pentagram(img, x0, y0, x1, y1, thickness, color):
+    r = abs(x0 - x1) // 2
+    x = x0 + r
+    y = y0 + r
+    draw = ImageDraw.Draw(img, 'RGB')
+    draw.ellipse((x0, y0, x1, y1), None, tuple(color), thickness)
+    points = []
+    for i in range(5):
+        phi = (np.pi / 5) * (2 * i + 3 / 2)
+        node_i = (int(x + r * np.cos(phi)), int(y + r * np.sin(phi)))
+        points.append(node_i)
+    for i in range(5):
+        draw.line((points[i], points[(i + 2) % 5]), tuple(color), thickness)
+    return img
+
+
+def invert(img, N, vertical):
+    if (vertical):
+        for i in range(img.size[0]):
+            if ((i // N) % 2 == 1):
+                img_1 = ImageOps.invert(img.copy().crop((i, 0, i + 1, img.size[1])))
+                img_2 = (i, 0)
+                img.paste(img_1, img_2)
+    else:
+        for i in range(img.size[1]):
+            if ((i // N) % 2 == 1):
+                img_1 = ImageOps.invert(img.copy().crop((0, i, img.size[0], i + 1)))
+                img_2 = (0, i)
+                img.paste(img_1, img_2)
+    return img
+
+
+def mix(img, rules):
+    mix_image = Image.new(""RGB"", (img.size[0], img.size[1]), color=0)
+    squares = []
+    for i in range(3):
+        for j in range(3):
+            squares.append(
+                (j * img.size[0] // 3, i * img.size[0] // 3, (j + 1) * img.size[0] // 3, (i + 1) * img.size[0] // 3))
+    for i in range(9):
+        image_1 = img.copy().crop(squares[rules[i]])
+        image_2 = (squares[i][0], squares[i][1])
+        mix_image.paste(image_1, image_2)
+    return mix_image
+
+
+"
+Тимошук Евгений Алексеевич,3388,лаба 1, Введение,"Timoshuk_Evgenii_lb1.py:
+
+import numpy as np
+
+
+def check_collision(bot1, bot2):
+    matrix = np.array((bot1[:2], bot2[:2]))
+    vector = np.array((-bot1[2], -bot2[2]))
+    rank = np.linalg.matrix_rank(matrix)
+    if rank != 2:
+        return None
+    else:
+        result = np.linalg.solve(matrix, vector)
+        result = np.around(result, 2)
+        result = tuple(result)
+        return result
+
+
+def check_surface(point1, point2, point3):
+    matrix = np.array([[point1[0], point1[1], 1],
+                       [point2[0], point2[1], 1],
+                       [point3[0], point3[1], 1]])
+    vector = np.array((point1[2], point2[2], point3[2]))
+    if np.linalg.matrix_rank(matrix) == 3:
+        return np.around(np.linalg.solve(matrix, vector), 2)
+    return None
+
+def check_rotation(vec, rad):
+    matrix = np.array([[np.cos(rad), -np.sin(rad), 0],[np.sin(rad), np.cos(rad), 0],[0, 0, 1]])
+    result = np.around(np.dot(matrix, vec), 2)
+    return result
+
+"
+Тимошук Евгений Алексеевич,3388,лаба 2, PIL,"main.py:
+
+import numpy as np
+from PIL import Image, ImageDraw
+
+
+# Задача 1
+def user_func(image, x0, y0, x1, y1, fill, width):
+    coordinates = (x0, y0, x1, y1)
+    drawing = ImageDraw.Draw(image)
+    drawing.line(coordinates, fill, width)
+    return image
+
+
+# Задача 2
+def check_coords(image, x0, y0, x1, y1):
+    x, y = image.size
+    return (x >= x1) and (x1 > x0) and (x0 >= 0) and (y >= y1) and (y1 > y0) and (y0 >= 0)
+
+
+def set_black_white(image, x0, y0, x1, y1):
+    if check_coords(image, x0, y0, x1, y1):
+        crop_img = image.crop((x0, y0, x1, y1))
+        crop_img = crop_img.convert(""1"")
+        image.paste(crop_img, (x0, y0))
+    return image
+
+
+# Задача 3
+def largestRectangleArea(heights):
+    n, heights, st, ans = len(heights), [0] + heights + [0], [], 0
+    for i in range(n + 2):
+        while st and heights[st[-1]] > heights[i]:
+            ans = max(ans, heights[st.pop(-1)] * (i - st[-1] - 1))
+        st.append(i)
+    return ans
+
+
+def check_sqr(x, pixel, sqr, max_sqr, n, ans, coordinates):
+    for y in range(len(pixel[x])):
+        if n <= pixel[x][y]:
+            sqr += n
+        if y == len(pixel[x]) - 1 or pixel[x][y + 1] < n:
+            if max_sqr < sqr:
+                max_sqr = sqr
+                coordinates = (y - max_sqr // n + 1, x - n + 1, y, x)
+                if max_sqr == ans:
+                    return True, max_sqr, sqr, coordinates
+            sqr = 0
+    return False, max_sqr, sqr, coordinates
+
+
+def find_big_rect(image, old_color):
+    pixel = np.array(image).tolist()
+    for x in range(len(pixel)):
+        for y in range(len(pixel[x])):
+            pixel[x][y] = 1 if pixel[x][y] == list(old_color) else 0
+    pixel = np.array(pixel)
+    heights = [0] * len(pixel[0])
+    ans = 0
+    for x in range(len(pixel)):
+        for y in range(len(pixel[x])):
+            if pixel[x][y] == 0:
+                heights[y] = 0
+            else:
+                heights[y] += 1
+        ans = max(ans, largestRectangleArea(heights))
+    for x in range(1, len(pixel)):
+        for y in range(len(pixel[x])):
+            if pixel[x][y] == 0:
+                pixel[x][y] = 0
+            else:
+                pixel[x][y] += pixel[x - 1][y]
+    max_sqr = 0
+    coordinates = (0, 0, 0, 0)
+    for x in range(len(pixel)):
+        sqr = 0
+        for n in set(pixel[x]):
+            fl, max_sqr, sqr, coordinates = check_sqr(x, pixel, sqr, max_sqr, n, ans, coordinates)
+            if fl:
+                return coordinates
+            else:
+                continue
+    return coordinates
+
+
+def find_rect_and_recolor(image, old_color, new_color):
+    coordinates = find_big_rect(image, old_color)
+    res = np.array(image)
+    res[coordinates[1]:coordinates[3] + 1, coordinates[0]:coordinates[2] + 1, :3] = list(new_color)
+    image = Image.fromarray(res)
+    return image
+
+
+
+"
+Трунов Борис Геннадьевич,3388,лаба 3, Машина Тьюринга,"main.py:
+
+space = ' '
+
+
+def q0(element):   
+    if element != space:
+        return element, 0, 1
+    if element == space:
+        return element, 1, 0
+
+
+def q1(element):
+    if element == 'b':
+        return element, 1, 3
+    if element == 'a' or element == 'c':
+        return element, 1, 1
+    if element == space:
+        return element, - 1, 2
+
+
+def q2(element):
+    if element != space:
+        return element, -1, 2
+    if element == space:
+        return element, 1, 6
+
+
+def q3(element):
+    if element == space:
+        return element, -1, 4
+    if element != space:
+        return '', 1, 5
+
+
+def q4(element):
+    return '', 0, 7
+
+
+def q5(element):
+    if element != space:
+        return '', 0, 7
+    if element == space:
+        return element, 0, 7
+
+
+def q6(element):
+    return '', 0, 7
+
+
+def q7(element):
+    pass
+
+        
+statements_dict = {
+    0: q0,
+    1: q1,
+    2: q2,
+    3: q3,
+    4: q4,
+    5: q5,
+    6: q6,
+    7: q7,
+}
+
+tape = list(input())
+current_state = 0
+current_element = 0
+
+while current_state != 7:
+    q_result = statements_dict[current_state](tape[current_element])
+    tape[current_element] = q_result[0]
+    current_element  += q_result[1]
+    current_state = q_result[2]
+
+print(''.join(tape))
+
+
+"
