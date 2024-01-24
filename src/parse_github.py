@@ -57,15 +57,21 @@ def parse_repo(args, table, code_dir=CODE_DIR, ignore=IGNORE_WORKS):
         contents = repo.get_contents("")
         for content in contents:
             if content.type != 'dir' or not have_code_dir(repo.get_contents(content.path)):
+                logging.warning(f"The content is not processed due to a violation of the structure."
+                                f"\nName of content:{content.name}. Owner login:{repo.get_commits(path=content.path)[0].author}")
                 continue
 
             last_commit = repo.get_commits(path=content.path)[0]
             author = last_commit.author
             if not author:
+                logging.warning(f"The content is not processed due to the absence of the author\n"
+                                f"Name of content:{content.name}")
                 continue
 
             login = author.login.lower()
             if login not in logins:
+                logging.warning(f"The content is not processed due to the absence of a username in the list of "
+                                f"allowed logins\nName of content:{content.name}. Owner login:{login}")
                 continue
 
             files = repo.get_contents(content.path + f'/{code_dir}')
