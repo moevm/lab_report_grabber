@@ -3,6 +3,7 @@ import csv
 import logging
 import log_config
 
+
 def get_args():
     parser = argparse.ArgumentParser(description='')
 
@@ -21,10 +22,16 @@ def get_args():
     parser.add_argument("--prefix",
                         type=str, help="Prefix for repo", required=True)
     parser.add_argument("--token_file",
-                        type=str, help="Path to token file", required=True)
+                        type=str, help="Path to token file", default="NO")
+    parser.add_argument("--token",
+                        type=str, help="Path to token file", default="NO")
     parser.add_argument("--out_table_name", "-o",
                         type=str, help="Output table name", default='out')
     args = vars(parser.parse_args())
+
+    if args['token_file'] == "NO" and args['token'] == "NO":
+        print("The token was not entered in any of the ways")
+        exit(0)
 
     logging.info("Parse works structure")
     try:
@@ -37,14 +44,16 @@ def get_args():
     args['works_structure'] = works_structure
 
     logging.info("Parse gh token")
-    try:
-        with open(args['token_file'], 'r') as f:
-            row = f.readline()
-    except Exception as e:
-        print(f"Work with token file error: {e}")
-        exit(0)
-
-    token = row.replace('\n', '')
-    args['token_file'] = token
+    if args['token_file'] != "NO":
+        try:
+            with open(args['token_file'], 'r') as f:
+                row = f.readline()
+        except Exception as e:
+            print(f"Work with token file error: {e}")
+            exit(0)
+        token = row.replace('\n', '')
+        args['token_file'] = token
+    else:
+        args['token_file'] = args['token']
 
     return args
