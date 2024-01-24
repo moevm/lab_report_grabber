@@ -1,6 +1,5 @@
 from classes import Student
 import logging
-import log_config
 
 
 def get_students(works, args, table):

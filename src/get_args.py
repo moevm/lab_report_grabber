@@ -1,7 +1,6 @@
 import argparse
-import csv
 import logging
-import log_config
+from utils import try_work_with_file, read_csv_table, read_token_file
 
 
 def get_args():
@@ -22,38 +21,27 @@ def get_args():
     parser.add_argument("--prefix",
                         type=str, help="Prefix for repo", required=True)
     parser.add_argument("--token_file",
-                        type=str, help="Path to token file", default="NO")
+                        type=str, help="Path to token file", default=False)
     parser.add_argument("--token",
-                        type=str, help="Path to token file", default="NO")
+                        type=str, help="Path to token file", default=False)
     parser.add_argument("--out_table_name", "-o",
                         type=str, help="Output table name", default='out')
     args = vars(parser.parse_args())
-
-    if args['token_file'] == "NO" and args['token'] == "NO":
-        print("The token was not entered in any of the ways")
+    if not args['token_file'] and not args['token']:
+        logging.error("The token was not entered in any of the ways")
         exit(0)
-
-    logging.info("Parse works structure")
-    try:
-        with open(args['works_structure'], 'r') as f:
-            rows = list(csv.reader(f))
-    except Exception as e:
-        print(f"Work with struct file error: {e}")
-        exit(0)
-    works_structure = {row[0]: [row[1], row[2]] for row in rows}
-    args['works_structure'] = works_structure
 
     logging.info("Parse gh token")
-    if args['token_file'] != "NO":
-        try:
-            with open(args['token_file'], 'r') as f:
-                row = f.readline()
-        except Exception as e:
-            print(f"Work with token file error: {e}")
-            exit(0)
+    if args['token_file']:
+        row = try_work_with_file("Work with token file error", args['token_file'], read_token_file)
         token = row.replace('\n', '')
         args['token_file'] = token
     else:
         args['token_file'] = args['token']
+
+    logging.info("Parse works structure")
+    rows = try_work_with_file("Work with struct file error", args['works_structure'], read_csv_table)
+    works_structure = {row[0]: [row[1], row[2]] for row in rows}
+    args['works_structure'] = works_structure
 
     return args

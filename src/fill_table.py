@@ -1,7 +1,6 @@
 import csv
 import os
 import logging
-import log_config
 
 def check_out_name(name):
     if name.endswith('.csv'):

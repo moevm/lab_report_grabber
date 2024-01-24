@@ -1,8 +1,6 @@
 from classes import Work
-from github import Github
-from github import Auth
+from utils import try_auth
 import logging
-import log_config
 
 CODE_DIR = 'src'
 IGNORE_WORKS = ['cw']
@@ -43,12 +41,7 @@ def get_logins(args, table):
 
 def parse_repo(args, table, code_dir=CODE_DIR, ignore=IGNORE_WORKS):
     logging.info("Parse repo")
-    try:
-        auth = Auth.Token(args['token_file'])
-    except Exception as e:
-        print(f"Work with GitHub error: {e}")
-        exit(0)
-    g = Github(auth=auth)
+    g = try_auth("Work with GitHub error", args['token_file'])
     logins = get_logins(args, table)
     repos = get_repo_list(g, args, table)
     logging.info(f"Repos names:{get_repos_list_for_logs(repos)}")
@@ -56,22 +49,23 @@ def parse_repo(args, table, code_dir=CODE_DIR, ignore=IGNORE_WORKS):
     for repo in repos:
         contents = repo.get_contents("")
         for content in contents:
-            if content.type != 'dir' or not have_code_dir(repo.get_contents(content.path)):
-                logging.warning(f"The content is not processed due to a violation of the structure."
-                                f"\nName of content:{content.name}. Owner login:{repo.get_commits(path=content.path)[0].author}")
-                continue
 
             last_commit = repo.get_commits(path=content.path)[0]
             author = last_commit.author
             if not author:
                 logging.warning(f"The content is not processed due to the absence of the author\n"
-                                f"Name of content:{content.name}")
+                                f"\tName of content: {content.name}")
                 continue
 
             login = author.login.lower()
             if login not in logins:
                 logging.warning(f"The content is not processed due to the absence of a username in the list of "
-                                f"allowed logins\nName of content:{content.name}. Owner login:{login}")
+                                f"allowed logins\n\tName of content: {content.name}. Owner login: {login}")
+                continue
+
+            if content.type != 'dir' or not have_code_dir(repo.get_contents(content.path)):
+                logging.warning(f"The content is not processed due to a violation of the structure."
+                                f"\n\tName of content: {content.name}. Owner login: {login}")
                 continue
 
             files = repo.get_contents(content.path + f'/{code_dir}')

@@ -1,5 +1,4 @@
 import logging
-import log_config
 from get_args import get_args
 from parse_table import parse_table
 from parse_github import parse_repo
