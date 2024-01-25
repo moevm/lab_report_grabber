@@ -1,4 +1,6 @@
 import logging
+import os
+
 from get_args import get_args
 from parse_table import parse_table
 from parse_github import parse_repo
@@ -12,6 +14,8 @@ def run():
     works = parse_repo(args, table)
     students = get_students(works, args, table)
     write_rows(args, students)
+    if args['google_table']:
+        os.remove(args['path'])
 
 
 if __name__ == "__main__":

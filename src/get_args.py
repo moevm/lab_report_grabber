@@ -2,6 +2,7 @@ import argparse
 import logging
 from utils import try_work_with_file, read_csv_table, read_token_file
 from parse_table import find_col_for_name
+from google_tables import get_google_table, GOOGLE_TABLE_NAME
 
 
 def check_options(tokens, full_names, groups, githubs):
@@ -24,7 +25,9 @@ def get_args():
     parser = argparse.ArgumentParser(description='')
 
     parser.add_argument("--path", "-p",
-                        type=str, help="Path to csv file", required=True)
+                        type=str, help="Path to csv file", default=GOOGLE_TABLE_NAME)
+    parser.add_argument("--google_table",
+                        type=str, help="Link to google table", default=False)
     parser.add_argument("--num_header_rows",
                         type=int, help="Num of header rows", default=1)
     parser.add_argument("--full_name_col",
@@ -50,6 +53,14 @@ def get_args():
     parser.add_argument("--out_table_name", "-o",
                         type=str, help="Output table name", default='out')
     args = vars(parser.parse_args())
+
+    if not args['google_table'] and args['path'] == GOOGLE_TABLE_NAME:
+        logging.error("The students table was not entered in any of the ways")
+        exit(0)
+
+    if args['google_table']:
+        get_google_table(args['google_table'])
+        args['path'] = GOOGLE_TABLE_NAME
 
     check_options((args['token_file'], args['token']),
                   (args['full_name_col'], args['nfull_name_col']),
