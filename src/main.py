@@ -1,4 +1,5 @@
 import logging
+import log_config
 import os
 
 from get_args import get_args

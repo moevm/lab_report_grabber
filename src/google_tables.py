@@ -10,6 +10,7 @@ def get_valid_link(link):
 
 
 def get_google_table(link, name=GOOGLE_TABLE_NAME):
+    logging.info("Parse google table")
     try:
         urllib.request.urlretrieve(get_valid_link(link), name)
     except Exception as e:

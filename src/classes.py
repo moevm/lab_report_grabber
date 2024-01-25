@@ -24,6 +24,6 @@ class Work:
     def code_to_string(self):
         code = ""
         for file_name in self.code:
-            code += f"{file_name}:\n\n{self.code[file_name]}\n\n"
+            code += f"{file_name}:\\n\\n{self.code[file_name]}\\n\\n"
 
         return code

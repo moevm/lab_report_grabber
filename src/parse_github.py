@@ -1,6 +1,7 @@
 from classes import Work
 from utils import try_auth
 import logging
+import log_config
 
 CODE_DIR = 'src'
 IGNORE_WORKS = ['cw']
@@ -49,7 +50,6 @@ def parse_repo(args, table, code_dir=CODE_DIR, ignore=IGNORE_WORKS):
     for repo in repos:
         contents = repo.get_contents("")
         for content in contents:
-
             last_commit = repo.get_commits(path=content.path)[0]
             author = last_commit.author
             if not author:
@@ -69,7 +69,7 @@ def parse_repo(args, table, code_dir=CODE_DIR, ignore=IGNORE_WORKS):
                 continue
 
             files = repo.get_contents(content.path + f'/{code_dir}')
-            code = {file.name: file.decoded_content.decode('utf-8') for file in files}
+            code = {file.name: file.decoded_content.decode('utf-8').replace('\n', '\\n') for file in files}
 
             index = content.name.rfind('_')
             eng_name = content.name[index + 1:] if index != -1 else content.name
