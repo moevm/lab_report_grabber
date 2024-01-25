@@ -1,14 +1,17 @@
+import logging
 import csv
 import os
-import logging
 
-def check_out_name(name):
+from src.classes import Student
+
+
+def check_out_name(name: str) -> str:
     if name.endswith('.csv'):
         return name
     return name + '.csv'
 
 
-def get_rows(students):
+def get_rows(students: list[Student]) -> list[list[str]]:
     rows = [['full_name', 'group', 'work_name', 'description', 'code']]
     for student in students:
         for work in student.get_fields():
@@ -16,7 +19,7 @@ def get_rows(students):
     return rows
 
 
-def write_rows(args, students):
+def write_rows(args: dict, students: list[Student]) -> None:
     rows = get_rows(students)
     name = check_out_name(args['out_table_name'])
     try:

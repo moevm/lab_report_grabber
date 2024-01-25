@@ -1,29 +1,26 @@
-from classes import Work
-from utils import try_auth
+from github import ContentFile, Repository, Github
 import logging
-import log_config
+
+from src.utils import try_auth
+from src.classes import Work
 
 CODE_DIR = 'src'
 IGNORE_WORKS = ['cw']
 
 
-def have_code_dir(contents, code_dir=CODE_DIR):
+def have_code_dir(contents: list[ContentFile], code_dir: str = CODE_DIR) -> bool:
     for content in contents:
         if content.name == code_dir and content.type == 'dir':
             return True
     return False
 
 
-def get_repos_name(args, table):
+def get_repos_name(args: dict, table: list[list[str]]) -> list[list[str]]:
     groups = set(row[args['group_col'] - 1] for row in table)
     return [args['prefix'].format(group=group).split('/') for group in groups]
 
 
-def get_repos_list_for_logs(repos):
-    return [f"{repo.owner.login}/{repo.name}" for repo in repos]
-
-
-def get_repo_list(user, args, table):
+def get_repo_list(user: Github, args: dict, table: list[list[str]]) -> list[Repository]:
     repos_name = get_repos_name(args, table)
     repos = []
     logging.info(f"Checking repos with names:{repos_name}")
@@ -35,12 +32,16 @@ def get_repo_list(user, args, table):
     return repos
 
 
-def get_logins(args, table):
+def get_repos_list_for_logs(repos: list[Repository]) -> list[str]:
+    return [f"{repo.owner.login}/{repo.name}" for repo in repos]
+
+
+def get_logins(args: dict, table: list[list[str]]) -> set[str]:
     logins = set(row[args['github_col'] - 1].lower() for row in table)
     return logins
 
 
-def parse_repo(args, table, code_dir=CODE_DIR, ignore=IGNORE_WORKS):
+def parse_repo(args: dict, table: list[list[str]], code_dir=CODE_DIR, ignore=IGNORE_WORKS) -> dict[str, list[Work]]:
     logging.info("Parse repo")
     g = try_auth("Work with GitHub error", args['token_file'])
     logins = get_logins(args, table)

@@ -1,11 +1,12 @@
 import argparse
 import logging
-from utils import try_work_with_file, read_csv_table, read_token_file
-from parse_table import find_col_for_name
-from google_tables import get_google_table, GOOGLE_TABLE_NAME
+
+from src.utils import try_work_with_file, read_csv_table, read_token_file
+from src.google_tables import get_google_table, GOOGLE_TABLE_NAME
+from src.parse_table import find_col_for_name
 
 
-def check_options(tokens, full_names, groups, githubs):
+def check_options(tokens: tuple, full_names: tuple, groups: tuple, githubs: tuple) -> None:
     if not any(tokens):
         logging.error("The token was not entered in any of the ways")
         exit(0)
@@ -21,7 +22,7 @@ def check_options(tokens, full_names, groups, githubs):
     return
 
 
-def get_args():
+def get_args() -> dict:
     parser = argparse.ArgumentParser(description='')
 
     parser.add_argument("--path", "-p",

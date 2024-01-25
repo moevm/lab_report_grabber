@@ -1,8 +1,9 @@
-from classes import Student
 import logging
 
+from src.classes import Student
 
-def get_students(works, args, table):
+
+def get_students(works: dict, args: dict, table: list[list[str]]) -> list[Student]:
     students = []
     for row in table:
         login = row[args['github_col'] - 1].lower()
