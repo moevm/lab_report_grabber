@@ -4,6 +4,7 @@ import logging
 
 from src.requests_limit import check_requests_limit
 
+timeout = 1  # secs
 log_counter = collections.Counter()
 
 
@@ -16,7 +17,8 @@ class CounterHandler(logging.Handler):
     def emit(self, record):
         log_counter[record.levelname] += 1
         if record.levelname == 'DEBUG':
-            log_counter['DEBUG'] = check_requests_limit(log_counter['DEBUG'])
+            # log_counter['DEBUG'] = check_requests_limit(log_counter['DEBUG'])
+            sleep(timeout)
 
 
 logger = logging.getLogger()
