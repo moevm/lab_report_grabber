@@ -46,7 +46,8 @@ def parse_repo(args: dict, table: list[list[str]], code_dir=CODE_DIR, ignore=IGN
     g = try_auth("Work with GitHub error", args['token_file'])
     logins = get_logins(args, table)
     repos = get_repo_list(g, args, table)
-    logging.info(f"Repos names:{get_repos_list_for_logs(repos)}")
+    logging.info(f"Repos names: {get_repos_list_for_logs(repos)}")
+    logging.info(f"Ignore works list: {ignore}")
     works = {login: [] for login in logins}
     for repo in repos:
         contents = repo.get_contents("")
@@ -75,6 +76,8 @@ def parse_repo(args: dict, table: list[list[str]], code_dir=CODE_DIR, ignore=IGN
             index = content.name.rfind('_')
             eng_name = content.name[index + 1:] if index != -1 else content.name
             if eng_name in ignore:
+                logging.warning(f"The content was ignore because name of work in ignore list."
+                                f"\n\tName of content: {content.name}. Owner login: {login}")
                 continue
 
             ru_name, description = args['works_structure'].get(eng_name, eng_name)

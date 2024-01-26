@@ -2,25 +2,21 @@ from time import sleep
 import collections
 import logging
 
-request_limit = 5000
+from src.requests_limit import check_requests_limit
+
 log_counter = collections.Counter()
+
+
+class DebugFilter:
+    def __call__(self, log):
+        return log.levelno == logging.DEBUG
 
 
 class CounterHandler(logging.Handler):
     def emit(self, record):
         log_counter[record.levelname] += 1
-        if log_counter['DEBUG'] >= (request_limit - 100):
-            print("The request limit has been exceeded. Pause for an hour")
-            log_counter['DEBUG'] = 0
-            sleep(60 * 60 + 5)  # 1 hour
-
-
-class DebugFilter:
-    def __call__(self, log):
-        if log.levelno == logging.DEBUG:
-            return True
-        else:
-            return False
+        if record.levelname == 'DEBUG':
+            log_counter['DEBUG'] = check_requests_limit(log_counter['DEBUG'])
 
 
 logger = logging.getLogger()
