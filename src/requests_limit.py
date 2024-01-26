@@ -2,7 +2,7 @@ from time import sleep
 import logging
 
 request_limit = 5000
-default_timeout = 60 * 60 + 5
+default_timeout = 60 * 60 + 5  # in secs
 
 
 def check_requests_limit(request_count: int, limit=request_limit, timeout=default_timeout) -> int:
