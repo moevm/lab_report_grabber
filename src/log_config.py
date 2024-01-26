@@ -1,10 +1,14 @@
 from time import sleep
 import collections
 import logging
+import os
 
-from src.requests_limit import check_requests_limit
+# from src.requests_limit import check_requests_limit
 
 timeout = 1  # secs
+log_folder = 'log'
+logs_file = 'logs.log'
+debug_file = 'debug.log'
 log_counter = collections.Counter()
 
 
@@ -21,25 +25,36 @@ class CounterHandler(logging.Handler):
             sleep(timeout)
 
 
-logger = logging.getLogger()
-logger.setLevel(logging.DEBUG)
-logger.addHandler(CounterHandler())
+def create_log_files() -> None:
+    os.makedirs('log', exist_ok=True)
+    for file in [logs_file, debug_file]:
+        file_path = os.path.join(log_folder, file)
+        if not os.path.exists(file_path):
+            with open(file_path, 'w') as f:
+                pass
 
-handler = logging.StreamHandler()
-handler.setLevel(logging.WARNING)
-formatter = logging.Formatter("%(levelname)s - %(message)s")
-handler.setFormatter(formatter)
-logger.addHandler(handler)
+    return
 
-handler = logging.FileHandler("logs/logs.log", "w")
-handler.setLevel(logging.INFO)
-formatter = logging.Formatter("%(asctime)s - %(levelname)s: %(message)s")
-handler.setFormatter(formatter)
-logger.addHandler(handler)
 
-handler = logging.FileHandler("logs/debug.log", "w")
-handler.setLevel(logging.DEBUG)
-handler.addFilter(DebugFilter())
-formatter = logging.Formatter("%(asctime)s - %(levelname)s: %(message)s")
-handler.setFormatter(formatter)
-logger.addHandler(handler)
+def set_logging_config() -> None:
+    create_log_files()
+
+    logger = logging.getLogger()
+    logger.setLevel(logging.DEBUG)
+    logger.addHandler(CounterHandler())
+    logger.handlers[0].setLevel(logging.WARNING)
+
+    handler = logging.FileHandler(os.path.join(log_folder, logs_file), "w")
+    handler.setLevel(logging.INFO)
+    formatter = logging.Formatter("%(asctime)s - %(levelname)s: %(message)s")
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
+
+    handler = logging.FileHandler(os.path.join(log_folder, debug_file), "w")
+    handler.setLevel(logging.DEBUG)
+    handler.addFilter(DebugFilter())
+    formatter = logging.Formatter("%(asctime)s - %(levelname)s: %(message)s")
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
+
+    return

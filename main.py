@@ -6,10 +6,11 @@ from src.parse_table import parse_table
 from src.parse_github import parse_repo
 from src.fill_table import write_rows
 from src.get_args import get_args
-import src.log_config
+from src.log_config import set_logging_config
 
 
 def run() -> None:
+    set_logging_config()
     args = get_args()
     table = parse_table(args)
     works = parse_repo(args, table)
