@@ -3,9 +3,10 @@ import collections
 import logging
 import os
 
-# from src.requests_limit import check_requests_limit
-
-timeout = 1  # secs
+# guaranteed - 0.75 [sec]
+# recommended - 0.45 [sec]
+# fast (~4100 requests/hour) - 0.35 [sec]
+timeout = 0.35  # in sec
 log_folder = 'log'
 logs_file = 'logs.log'
 debug_file = 'debug.log'
@@ -19,9 +20,7 @@ class DebugFilter:
 
 class CounterHandler(logging.Handler):
     def emit(self, record):
-        log_counter[record.levelname] += 1
-        if record.levelname == 'DEBUG':
-            # log_counter['DEBUG'] = check_requests_limit(log_counter['DEBUG'])
+        if record.levelname == 'DEBUG' and 'api.github.com' in record.getMessage():
             sleep(timeout)
 
 

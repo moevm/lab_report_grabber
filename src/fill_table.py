@@ -29,6 +29,6 @@ def write_rows(args: dict, students: list[Student]) -> None:
             writer = csv.writer(f)
             writer.writerows(rows)
     except Exception as e:
-        print(f"Work with output file error: {e}")
+        logging.error(f"Work with output file error: {e}")
         exit(0)
     return

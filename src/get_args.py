@@ -6,7 +6,12 @@ from src.google_tables import get_google_table, GOOGLE_TABLE_NAME
 from src.parse_table import find_col_for_name
 
 
-def check_options(tokens: tuple, full_names: tuple, groups: tuple, githubs: tuple) -> None:
+def check_options(args: dict) -> None:
+    tokens = (args['token_file'], args['token']),
+    full_names = (args['full_name_col'], args['nfull_name_col']),
+    groups = (args['group_col'], args['ngroup_col']),
+    githubs = (args['github_col'], args['ngroup_col'])
+
     if not any(tokens):
         logging.error("The token was not entered in any of the ways")
         exit(0)
@@ -19,10 +24,11 @@ def check_options(tokens: tuple, full_names: tuple, groups: tuple, githubs: tupl
     if not any(githubs):
         logging.error("The github col was not entered in any of the ways")
         exit(0)
+
     return
 
 
-def get_args() -> dict:
+def init_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description='')
 
     parser.add_argument("--path", "-p",
@@ -48,12 +54,20 @@ def get_args() -> dict:
     parser.add_argument("--prefix",
                         type=str, help="Prefix for repo", required=True)
     parser.add_argument("--token_file",
-                        type=str, help="Path to token file", default=False)
+                        type=str, help="Path to github token file", default=False)
     parser.add_argument("--token",
-                        type=str, help="Path to token file", default=False)
+                        type=str, help="Github token", default=False)
     parser.add_argument("--out_table_name", "-o",
                         type=str, help="Output table name", default='out')
+
+    return parser
+
+
+def get_args() -> dict:
+    parser = init_parser()
     args = vars(parser.parse_args())
+
+    check_options(args)
 
     if not args['google_table'] and args['path'] == GOOGLE_TABLE_NAME:
         logging.error("The students table was not entered in any of the ways")
@@ -62,11 +76,6 @@ def get_args() -> dict:
     if args['google_table']:
         get_google_table(args['google_table'])
         args['path'] = GOOGLE_TABLE_NAME
-
-    check_options((args['token_file'], args['token']),
-                  (args['full_name_col'], args['nfull_name_col']),
-                  (args['group_col'], args['ngroup_col']),
-                  (args['github_col'], args['ngroup_col']))
 
     named_cols = ['nfull_name_col', 'ngroup_col', 'ngithub_col']
     for named_col in named_cols:

@@ -41,48 +41,83 @@ def get_logins(args: dict, table: list[list[str]]) -> set[str]:
     return logins
 
 
-def parse_repo(args: dict, table: list[list[str]], code_dir=CODE_DIR, ignore=IGNORE_WORKS) -> dict[str, list[Work]]:
+def check_autor(author, content) -> bool:
+    if not author:
+        logging.warning(f"The content is not processed due to the absence of the author\n"
+                        f"\tName of content: {content.name}")
+        return False
+
+    return True
+
+
+def check_login(login, logins, content) -> bool:
+    if login not in logins:
+        logging.warning(f"The content is not processed due to the absence of a username in the list of "
+                        f"allowed logins\n\tName of content: {content.name} . Owner login: {login}")
+        return False
+
+    return True
+
+
+def check_work_name(name, login, content, ignore=IGNORE_WORKS) -> bool:
+    if name in ignore:
+        logging.warning(f"The content was ignore because name of work in ignore list."
+                        f"\n\tName of content: {content.name} . Owner login: {login}")
+        return False
+
+    return True
+
+
+def try_get_files(login, repo, content, code_dir=CODE_DIR):
+    try:
+        return repo.get_contents(content.path + f'/{code_dir}')
+
+    except Exception as e:
+        logging.warning(f"The content is not processed due to a violation of the structure."
+                        f"\n\tName of content: {content.name} . Owner login: {login}")
+
+        return False
+
+
+def parse_repo(args: dict, table: list[list[str]], ignore=IGNORE_WORKS) -> dict[str, list[Work]]:
     logging.info("Parse repo")
+
     g = try_auth("Work with GitHub error", args['token_file'])
     logins = get_logins(args, table)
     repos = get_repo_list(g, args, table)
+
     logging.info(f"Repos names: {get_repos_list_for_logs(repos)}")
     logging.info(f"Ignore works list: {ignore}")
+
     works = {login: [] for login in logins}
     for repo in repos:
         contents = repo.get_contents("")
+
         for content in contents:
             last_commit = repo.get_commits(path=content.path)[0]
             author = last_commit.author
-            if not author:
-                logging.warning(f"The content is not processed due to the absence of the author\n"
-                                f"\tName of content: {content.name}")
+            if not check_autor(author, content):
                 continue
 
             login = author.login.lower()
-            if login not in logins:
-                logging.warning(f"The content is not processed due to the absence of a username in the list of "
-                                f"allowed logins\n\tName of content: {content.name}. Owner login: {login}")
+            if not check_login(login, logins, content):
                 continue
 
-            if content.type != 'dir' or not have_code_dir(repo.get_contents(content.path)):
-                logging.warning(f"The content is not processed due to a violation of the structure."
-                                f"\n\tName of content: {content.name}. Owner login: {login}")
+            files = try_get_files(login, repo, content)
+            if not files:
                 continue
 
-            files = repo.get_contents(content.path + f'/{code_dir}')
             code = {file.name: file.decoded_content.decode('utf-8').replace('\n', '\\n') for file in files}
 
             index = content.name.rfind('_')
+
             eng_name = content.name[index + 1:] if index != -1 else content.name
-            if eng_name in ignore:
-                logging.warning(f"The content was ignore because name of work in ignore list."
-                                f"\n\tName of content: {content.name}. Owner login: {login}")
+            if not check_work_name(eng_name, login, content):
                 continue
 
             ru_name, description = args['works_structure'].get(eng_name, eng_name)
 
-            logging.info(f"Current student login: {login}. Work name: {eng_name}")
+            logging.info(f"Current student login: {login} . Work name: {eng_name}")
 
             works[login].append(Work(eng_name=eng_name, ru_name=ru_name,
                                      description=description, code=code))

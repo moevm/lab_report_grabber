@@ -15,4 +15,5 @@ def get_google_table(link: str, name: str = GOOGLE_TABLE_NAME) -> None:
     except Exception as e:
         logging.error(f"Error work with google table: {e}")
         exit(0)
+
     return
