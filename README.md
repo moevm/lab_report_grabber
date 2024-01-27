@@ -58,7 +58,7 @@
  `--token_file token.txt` \
  `--token ghp_MyGitGubToken`
  ##### Примечание
- в аргументах начинающихся на 'n' поиск столбца происходит в первых `num_header_rows` (см. ниже) \
+ в аргументах начинающихся на 'n' поиск столбца происходит в первых `num_header_rows` (см. ниже)
  
  `--full_name_col 1`\
  `--nfull_name_col "ФИО"`\
