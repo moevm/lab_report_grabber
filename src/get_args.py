@@ -32,17 +32,17 @@ def get_args() -> dict:
     parser.add_argument("--num_header_rows",
                         type=int, help="Num of header rows", default=1)
     parser.add_argument("--full_name_col",
-                        type=int, help="Full name column", required=False)
+                        type=int, help="Full name column", default=False)
     parser.add_argument("--nfull_name_col",
-                        type=str, help="Named full name column", required=False)
+                        type=str, help="Named full name column", default=False)
     parser.add_argument("--group_col",
-                        type=int, help="Group column", required=False)
+                        type=int, help="Group column", default=False)
     parser.add_argument("--ngroup_col",
-                        type=str, help="Named group column", required=False)
+                        type=str, help="Named group column", default=False)
     parser.add_argument("--github_col",
-                        type=int, help="Github column", required=False)
+                        type=int, help="Github column", default=False)
     parser.add_argument("--ngithub_col",
-                        type=str, help="Named github column", required=False)
+                        type=str, help="Named github column", default=False)
     parser.add_argument("--works_structure", "-s",
                         type=str, help='Path to works structure', required=True)
     parser.add_argument("--prefix",

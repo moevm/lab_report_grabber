@@ -1,8 +1,85 @@
-# lab_report_grabber
-## Пример запуска 1:
-	  python3 main.py -p students_table.csv  --full_name_col 1 --group_col 2 --github_col 6 --prefix moevm/cs-2023-{group} --token_file token.txt -s struct_of_works.csv -o result2.cs --num_header_rows 2
-## Пример запуска 2:
-	  python3 main.py  --nfull_name_col "ФИО" --ngroup_col "Группа" --ngithub_col "Логин на github" --prefix moevm/cs-2023-{group} --token "ghp_MyGitHubLogin" -s struct_of_works.csv -o result2.cs --num_header_rows 2 --google_table https://docs.google.com/spreadsheets/d/1VdUE351rvOXpVUGOLoc7PlbT1HJTMGBYtdvmE6ncBG0/edit#gid=1030499006
 
-## Как взять корректную ссылку гугл таблицы:
+# lab_report_grabber
+## Установка (Linux)
+1. Клонирование репозитория 
+
+```git clone -b demo git@github.com:moevm/lab_report_grabber.git```
+
+2. Переход в директорию Oxygen
+
+```cd lab_report_grabber/```
+
+3. Создание виртуального окружения
+
+```python3 -m venv venv```
+
+4. Активация виртуального окружения
+
+```source venv/bin/activate```
+
+5. Установка зависимостей
+
+```pip3 install -r requirements.txt```
+
+## Запуск
+``` python3 main.py --arg1 --arg2 ...``` 
+## Документация
+### Обязательные аргументы
+| Название | Описание                                                     |
+|----------|--------------------------------------------------------------|
+| `--works_structure` `-s`   | Путь до сsv таблица с английскими постфиксами работ, полным названием на русском и аннотацией работы          |
+##### Пример
+|  |  ||
+|--|--|--|
+|lb1|Лабораторная работа №1|Введение|
+|lb2|Лабораторная работа №2|Работа с библиотеками|
+|lb3|Лабораторная работа №3|Работа со строками|
+|lb4|Лабораторная работа №4|Работа с сортировкой|
+`-s struct_of_works.csv`
+<br/>
+
+| Название | Описание                                                     |
+|----------|--------------------------------------------------------------|
+| `--prefix`   | Префикс репозиториев в виде форматной строки: owner/repo-{group}|
+#### Пример
+`-prefix moevm/cs-2023-{group}`
+<br/>
+
+| Название | Описание                                                     |
+|----------|--------------------------------------------------------------|
+| `--path` `-p` ИЛИ `--google_table`  | Путь до csv таблицы со студентами / ссылка на гугл таблицу со студентами (как правильно взять ссылку см. ниже)|
+|`--token_file`ИЛИ `--token`| Файл с github токеном в первой строке / github токен 
+|`--full_name_col`ИЛИ `--nfull_name_col`| Номер столбца с ФИО студентов (нумерация с единицы) / название столбцы с ФИО студентов|
+|`--group_col`ИЛИ `--ngroup_col`| Номер столбца с группой студентов (нумерация с единицы) / название столбца с группой студентов|
+|`--github_col`ИЛИ `--ngithub_col`| Номер столбца с github логинами студентов (нумерация с единицы) / название столбца с github логинами студентов|студентов|
+#### Примеры
+`-p students_table.csv`\
+ `--google_table https://docs.google.com/spreadsheets/d/MyGoogleTable#gid=07` \
+ `--token_file token.txt` \
+ `--token ghp_MyGitGubToken`
+ ##### Примечание
+ в аргументах начинающихся на 'n' поиск столбца происходит в первых `num_header_rows` (см. ниже) \
+ 
+ `--full_name_col 1`\
+ `--nfull_name_col "ФИО"`\
+ `--group_col 2`\
+ `--ngroup_col "Группа"`\
+ `--github_col 3`\
+ `--ngithub_col 3 "Github логин"`
+
+### Необязательные аргументы
+| Название | Описание                                                     |
+|----------|--------------------------------------------------------------|
+| `--out_table_name` `-o`  | Название выходной csv таблицы. Значение по умолчанию: `out`|
+| `--num_header_rows` | Количество заголовочных строк, которые не будут учитываться в обработке данных (не учитываются первые 'n' строк). Значение по умолчанию: `1`|
+#### Примеры
+`-o result.csv`\
+`--out_table_name result_table` \
+`--num_header_rows 2`
+### Как взять корректную ссылку гугл таблицы
 Открыть нужный лист, скопировать ссылку из адрессной строки
+
+## Примеры запуска
+```python3 main.py -p students_table.csv  --full_name_col 1 --group_col 2 --github_col 6 --prefix moevm/cs-2023-{group} --token_file token.txt -s struct_of_works.csv -o result2.cs --num_header_rows 2```
+
+``` python3 main.py  --nfull_name_col "ФИО" --ngroup_col "Группа" --ngithub_col "Логин на github" --prefix moevm/pr-2023-{group} --token "ghp_MyGitHubLogin" -s struct_of_works.csv -o result2.cs --num_header_rows 2 --google_table https://docs.google.com/spreadsheets/d/MyGoogleTable/edit#gid=1030499006```
