@@ -5,7 +5,7 @@
 
 ```git clone -b demo git@github.com:moevm/lab_report_grabber.git```
 
-2. Переход в директорию Oxygen
+2. Переход в директорию lab_report_grabber
 
 ```cd lab_report_grabber/```
 
