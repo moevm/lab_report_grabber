@@ -15,7 +15,8 @@ def get_students(works: dict, args: dict, table: list[list[str]]) -> list[Studen
         if login not in works.keys() or works[login] == []:
             continue
 
-        logging.info(cfg['Info']['add_student'].format(login=login, full_name=full_name, group=group))
+        logging.info(cfg['Info']['add_student'].format(full_name=full_name,
+                                                       login=login, group=group))
         students.append(Student(full_name=full_name, group=group,
                                 github=login, works=works[login]))
 

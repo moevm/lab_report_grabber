@@ -32,7 +32,7 @@ def create_log_files() -> None:
     for file in [logs_file, debug_file]:
         file_path = os.path.join(log_folder, file)
         if not os.path.exists(file_path):
-            with open(file_path, 'w') as f:
+            with open(file_path, 'w'):
                 pass
 
     return

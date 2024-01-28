@@ -74,7 +74,7 @@ def try_get_files(login, repo, content):
     try:
         return repo.get_contents(content.path + f"/{cfg['Const']['code_dir']}")
 
-    except Exception as e:
+    except:
         logging.warning(cfg['Warning']['get_files'].format(name=content.name, login=login))
 
         return False

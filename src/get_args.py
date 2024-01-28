@@ -26,7 +26,8 @@ def check_options(args: dict) -> None:
 
 
 def check_student_table(args: dict) -> None:
-    if not args['google_table'] and args['path'] == cfg['Const']['google_table_name']:
+    default = cfg['Const']['google_table_name']
+    if not args['google_table'] and args['path'] == default:
         logging.error(cfg['Error']['empty_table'])
         exit(0)
 
@@ -115,12 +116,14 @@ def get_args() -> dict:
     if args['token']:
         args['token_file'] = args['token']
     else:
-        row = try_work_with_file(cfg['Error']['file'].format(name="token"), args['token_file'], read_token_file)
+        row = try_work_with_file(cfg['Error']['file'].format(name="token"),
+                                 args['token_file'], read_token_file)
         token = row.replace('\n', '')
         args['token_file'] = token
 
     logging.info(cfg['Info']['parse_struct'])
-    rows = try_work_with_file(cfg['Error']['file'].format(name="struct"), args['works_structure'], read_csv_table)
+    rows = try_work_with_file(cfg['Error']['file'].format(name="struct"),
+                              args['works_structure'], read_csv_table)
     works_structure = {row[0]: [row[1], row[2]] for row in rows}
     args['works_structure'] = works_structure
 
