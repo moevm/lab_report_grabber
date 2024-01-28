@@ -4,6 +4,6 @@ import os
 
 def get_config() -> dict:
     config = configparser.ConfigParser()
-    config.read(os.path.join("src", "config.ini"))
+    config.read(os.path.join("", "config.ini"))
 
     return config
