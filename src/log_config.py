@@ -7,7 +7,7 @@ from src.config import get_config
 
 cfg = get_config()
 
-timeout = int(cfg['Const']['timeout'])
+timeout = float(cfg['Const']['timeout'])
 log_format = "%(asctime)s - %(levelname)s: %(message)s"
 log_folder = cfg['Const']['log_folder']
 logs_file = cfg['Const']['logs_file']
