@@ -3,13 +3,16 @@ import collections
 import logging
 import os
 
-# guaranteed - 0.75 [sec]
-# recommended - 0.45 [sec]
-# fast (~4100 requests/hour) - 0.35 [sec]
-timeout = 0.35  # in sec
-log_folder = 'log'
-logs_file = 'logs.log'
-debug_file = 'debug.log'
+from src.config import get_config
+
+cfg = get_config()
+
+timeout = int(cfg['Const']['timeout'])
+log_format = "%(asctime)s - %(levelname)s: %(message)s"
+log_folder = cfg['Const']['log_folder']
+logs_file = cfg['Const']['logs_file']
+debug_file = cfg['Const']['debug_file']
+
 log_counter = collections.Counter()
 
 
@@ -25,7 +28,7 @@ class CounterHandler(logging.Handler):
 
 
 def create_log_files() -> None:
-    os.makedirs('log', exist_ok=True)
+    os.makedirs(log_folder, exist_ok=True)
     for file in [logs_file, debug_file]:
         file_path = os.path.join(log_folder, file)
         if not os.path.exists(file_path):
@@ -45,14 +48,14 @@ def set_logging_config() -> None:
 
     handler = logging.FileHandler(os.path.join(log_folder, logs_file), "w")
     handler.setLevel(logging.INFO)
-    formatter = logging.Formatter("%(asctime)s - %(levelname)s: %(message)s")
+    formatter = logging.Formatter(log_format)
     handler.setFormatter(formatter)
     logger.addHandler(handler)
 
     handler = logging.FileHandler(os.path.join(log_folder, debug_file), "w")
     handler.setLevel(logging.DEBUG)
     handler.addFilter(DebugFilter())
-    formatter = logging.Formatter("%(asctime)s - %(levelname)s: %(message)s")
+    formatter = logging.Formatter(log_format)
     handler.setFormatter(formatter)
     logger.addHandler(handler)
 

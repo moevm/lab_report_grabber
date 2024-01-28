@@ -1,6 +1,9 @@
 import logging
 
+from src.config import get_config
 from src.classes import Student
+
+cfg = get_config()
 
 
 def get_students(works: dict, args: dict, table: list[list[str]]) -> list[Student]:
@@ -12,7 +15,7 @@ def get_students(works: dict, args: dict, table: list[list[str]]) -> list[Studen
         if login not in works.keys() or works[login] == []:
             continue
 
-        logging.info(f"Add student: {login}, {full_name}, {group}")
+        logging.info(cfg['Info']['add_student'].format(login=login, full_name=full_name, group=group))
         students.append(Student(full_name=full_name, group=group,
                                 github=login, works=works[login]))
 
