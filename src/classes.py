@@ -1,3 +1,8 @@
+from src.config import get_config
+
+cfg = get_config()
+
+
 class Work:
     def __init__(self, eng_name: str, ru_name: str, description: str, code: dict):
         self.eng_name = eng_name
@@ -8,7 +13,7 @@ class Work:
     def code_to_string(self) -> str:
         code = ""
         for file_name in self.code:
-            code += f"{file_name}:\\n\\n{self.code[file_name]}\\n\\n"
+            code += cfg['Const']['code_format'].format(file_name=file_name, code=self.code[file_name])
 
         return code
 
