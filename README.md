@@ -81,6 +81,6 @@
 Открыть нужный лист, скопировать ссылку из адрессной строки
 
 ## Примеры запуска
-```python3 main.py -p students_table.csv  --full_name_col 1 --group_col 2 --github_col 6 --prefix moevm/cs-2023-{group} --token_file token.txt -s struct_of_works.csv -o result2.cs --num_header_rows 2```
+```python3 main.py -p input/students_table_example.csv  --full_name_col 1 --group_col 2 --github_col 6 --prefix moevm/cs-2023-{group} --token_file input/token.txt -s input/struct_of_works_example.csv -o result2.cs --num_header_rows 2```
 
-``` python3 main.py  --nfull_name_col "ФИО" --ngroup_col "Группа" --ngithub_col "Логин на github" --prefix moevm/pr-2023-{group} --token "ghp_MyGitHubLogin" -s struct_of_works.csv -o result2.cs --num_header_rows 2 --google_table https://docs.google.com/spreadsheets/d/MyGoogleTable/edit#gid=1030499006```
+``` python3 main.py  --nfull_name_col "ФИО" --ngroup_col "Группа" --ngithub_col "Логин на github" --prefix moevm/pr-2023-{group} --token "ghp_MyGitHubLogin" -s input/struct_of_works_example.csv -o result2.cs --num_header_rows 2 --google_table https://docs.google.com/spreadsheets/d/MyGoogleTable/edit#gid=1030499006```
