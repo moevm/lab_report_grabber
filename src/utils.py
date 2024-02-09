@@ -32,3 +32,16 @@ def try_auth(message: str, token: str) -> Github:
         exit(0)
 
     return g
+
+
+def get_work_names(args: dict, table: list[list[str]]):
+    work_names = {}
+    for row in table:
+        name = row[args['eng_name_col'] - 1]
+        surname = row[args['eng_surname_col'] - 1]
+        login = row[args['github_col'] - 1].lower()
+        for work in args['works_structure']:
+            work_name = f"{surname}_{name}_{work}"
+            work_names[work_name] = login
+
+    return work_names

@@ -3,20 +3,10 @@ import logging
 import json
 
 from src.config import get_config
-from src.utils import try_auth
+from src.utils import try_auth, get_work_names
 from src.classes import Work
 
 cfg = get_config()
-
-"""
-#It is not currently in use. Replaced by the try except construction
-
-def have_code_dir(contents: list[ContentFile]) -> bool:
-    for content in contents:
-        if content.name == cfg['List']['code_dir'] and content.type == 'dir':
-            return True
-    return False
-"""
 
 
 def get_repos_name(args: dict, table: list[list[str]]) -> list[list[str]]:
@@ -89,20 +79,16 @@ def parse_repo(args: dict, table: list[list[str]]) -> dict[str, list[Work]]:
 
     logging.info(cfg['Info']['repo_names'].format(names=get_repos_list_for_logs(repos)))
     logging.info(cfg['Info']['ignore_works_list'].format(ignore=cfg['List']['ignore_works']))
-
+    works_names = get_work_names(args, table)
     works = {login: [] for login in logins}
     for repo in repos:
         contents = repo.get_contents("")
-
         for content in contents:
-            last_commit = repo.get_commits(path=content.path)[0]
-            author = last_commit.author
-            if not check_autor(author, content):
+
+            if content.name not in works_names:
                 continue
 
-            login = author.login.lower()
-            if not check_login(login, logins, content):
-                continue
+            login = works_names[content.name]
 
             files = try_get_files(login, repo, content)
             if not files:

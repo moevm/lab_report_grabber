@@ -14,7 +14,9 @@ def check_options(args: dict) -> None:
         'token': (args['token_file'], args['token']),
         'full_name': (args['full_name_col'], args['nfull_name_col']),
         'group': (args['group_col'], args['ngroup_col']),
-        'github': (args['github_col'], args['ngroup_col'])
+        'github': (args['github_col'], args['ngroup_col']),
+        'eng_name': (args['eng_name_col'], args['neng_name_col']),
+        'eng_surname': (args['eng_surname_col'], args['neng_surname_col'])
     }
 
     for field in fields:
@@ -56,6 +58,22 @@ def init_parser() -> argparse.ArgumentParser:
     parser.add_argument("--nfull_name_col",
                         type=str, default=False,
                         help="Named full name column")
+
+    parser.add_argument("--eng_name_col",
+                        type=int, default=False,
+                        help="Eng name col")
+
+    parser.add_argument("--neng_name_col",
+                        type=str, default=False,
+                        help="Named eng name col")
+
+    parser.add_argument("--eng_surname_col",
+                        type=int, default=False,
+                        help="Eng surname col")
+
+    parser.add_argument("--neng_surname_col",
+                        type=str, default=False,
+                        help="Named sureng name col")
 
     parser.add_argument("--group_col",
                         type=int, default=False,
@@ -107,7 +125,7 @@ def get_args() -> dict:
         get_google_table(args['google_table'])
         args['path'] = cfg['Const']['google_table_name']
 
-    named_cols = ['nfull_name_col', 'ngroup_col', 'ngithub_col']
+    named_cols = ['nfull_name_col', 'ngroup_col', 'ngithub_col', 'neng_name_col', 'neng_surname_col']
     for named_col in named_cols:
         if args[named_col]:
             args[named_col[1:]] = find_col_for_name(args, args[named_col])
