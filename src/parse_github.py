@@ -62,8 +62,8 @@ def check_work_name(name, login, content) -> bool:
 
 def try_get_files(login, repo, content):
     try:
-        return repo.get_contents(content.path + f"/{cfg['Const']['code_dir']}")
-
+        answer = repo.get_contents(content.path + f"/{cfg['Const']['code_dir']}")
+        return answer
     except:
         logging.warning(cfg['Warning']['get_files'].format(name=content.name, login=login))
 
@@ -84,17 +84,34 @@ def parse_repo(args: dict, table: list[list[str]]) -> dict[str, list[Work]]:
     for repo in repos:
         contents = repo.get_contents("")
         for content in contents:
+            if args['eng_names']:
+                if content.name not in works_names:
+                    continue
 
-            if content.name not in works_names:
-                continue
+                login = works_names[content.name]
+            else:
+                last_commit = repo.get_commits(path=content.path)[0]
+                author = last_commit.author
+                if not check_autor(author, content):
+                    continue
 
-            login = works_names[content.name]
+                login = author.login.lower()
+                if not check_login(login, logins, content):
+                    continue
 
             files = try_get_files(login, repo, content)
             if not files:
                 continue
 
-            code = {file.name: file.decoded_content.decode('utf-8').replace('\n', '\\n') for file in files}
+            code = {}
+            try:
+                for file in files:
+                    try:
+                        code[file.name] = file.decoded_content.decode('utf-8').replace('\n', '\\n')
+                    except:
+                        logging.warning(cfg['Warning']['get_files'].format(name=content.name, login=login))
+            except:
+                logging.warning(cfg['Warning']['get_files'].format(name=content.name, login=login))
 
             index = content.name.rfind('_')
 

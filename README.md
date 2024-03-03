@@ -1,4 +1,5 @@
 
+
 # lab_report_grabber
 ## Установка (Linux)
 1. Клонирование репозитория 
@@ -75,6 +76,7 @@
 |----------|--------------------------------------------------------------|
 | `--out_table_name` `-o`  | Название выходной csv таблицы. Значение по умолчанию: `out`|
 | `--num_header_rows` | Количество заголовочных строк, которые не будут учитываться в обработке данных (не учитываются первые 'n' строк). Значение по умолчанию: `1`|
+|`--eng_names`|Значение `True`, если необходимо производить поиск работ по английским именам студентов. В этом случае надо указать два дополнительных аргумента: (`--eng_name_col` ИЛИ `--neng_name_col`) и (`--eng_surname_col` ИЛИ `--neng_surname_col`), где аргументы без приставки `n` -- это номера столбцов, а с приставкой `n` их названия в таблицы. Значение по умолчанию: `False`|
 #### Примеры
 `-o result.csv`\
 `--out_table_name result_table` \
@@ -86,3 +88,5 @@
 ```python3 main.py -p input/students_table_example.csv  --full_name_col 1 --group_col 2 --github_col 6 --prefix moevm/cs-2023-{group} --token_file input/token.txt -s input/struct_of_works_example.csv -o result2.cs --num_header_rows 2```
 
 ``` python3 main.py  --nfull_name_col "ФИО" --ngroup_col "Группа" --ngithub_col "Логин на github" --prefix moevm/pr-2023-{group} --token "ghp_MyGitHubLogin" -s input/struct_of_works_example.csv -o result2.cs --num_header_rows 2 --google_table https://docs.google.com/spreadsheets/d/MyGoogleTable/edit#gid=1030499006```
+
+```python3 main.py --neng_name_col "Имя" --neng_surname_col "Фамилия" --nfull_name_col "ФИО" --ngroup_col "Группа" --ngithub_col "Логин на github" --prefix moevm/pr-2023-{group} --token "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" -s input/struct_of_works_example.csv -o result2.cs --num_header_rows 2 --google_table https://docs.google.com/spreadsheets/d/MyGoogleTable/edit#gid=1030499006 --eng_names True```
