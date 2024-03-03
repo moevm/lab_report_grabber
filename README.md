@@ -89,4 +89,4 @@
 
 ``` python3 main.py  --nfull_name_col "ФИО" --ngroup_col "Группа" --ngithub_col "Логин на github" --prefix moevm/pr-2023-{group} --token "ghp_MyGitHubLogin" -s input/struct_of_works_example.csv -o result2.cs --num_header_rows 2 --google_table https://docs.google.com/spreadsheets/d/MyGoogleTable/edit#gid=1030499006```
 
-```python3 main.py --neng_name_col "Имя" --neng_surname_col "Фамилия" --nfull_name_col "ФИО" --ngroup_col "Группа" --ngithub_col "Логин на github" --prefix moevm/pr-2023-{group} --token "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" -s input/struct_of_works_example.csv -o result2.cs --num_header_rows 2 --google_table https://docs.google.com/spreadsheets/d/MyGoogleTable/edit#gid=1030499006 --eng_names True```
+```python3 main.py --neng_name_col "Имя" --neng_surname_col "Фамилия" --nfull_name_col "ФИО" --ngroup_col "Группа" --ngithub_col "Логин на github" --prefix moevm/pr-2023-{group} --token "ghp_MyGitHubToken" -s input/struct_of_works_example.csv -o result2.cs --num_header_rows 2 --google_table https://docs.google.com/spreadsheets/d/MyGoogleTable/edit#gid=1030499006 --eng_names True```
