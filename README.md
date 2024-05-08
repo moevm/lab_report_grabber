@@ -2,6 +2,9 @@
 
 # lab_report_grabber
 ## Установка (Linux)
+
+Базовое требование - версия python 3.10 или выше. 
+
 1. Клонирование репозитория 
 
 ```git clone -b demo git@github.com:moevm/lab_report_grabber.git```
