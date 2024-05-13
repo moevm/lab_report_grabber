@@ -83,6 +83,7 @@ def parse_repo(args: dict, table: list[list[str]]) -> dict[str, list[Work]]:
     works = {login: [] for login in logins}
     for repo in repos:
         contents = repo.get_contents("")
+        uniq_students = set()
         for content in contents:
             if args['eng_names']:
                 if content.name not in works_names:
@@ -125,6 +126,10 @@ def parse_repo(args: dict, table: list[list[str]]) -> dict[str, list[Work]]:
 
             works[login].append(Work(eng_name=eng_name, ru_name=ru_name,
                                      description=description, code=code))
+            
+            if login not in uniq_students:
+                uniq_students.add(login)
+                print(f"students count: {len(uniq_students)}/{len(logins)}")
 
     g.close()
     return works
