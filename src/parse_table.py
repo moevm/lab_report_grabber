@@ -5,7 +5,6 @@ from src.utils import try_work_with_file, read_csv_table
 
 cfg = get_config()
 
-
 def parse_table(args: dict) -> list[list[str]]:
     logging.info(cfg['Info']['parse_table'].format(where='local directory'))
     table = try_work_with_file(cfg['Error']['file'].format(name='students table'), args['path'], read_csv_table)
