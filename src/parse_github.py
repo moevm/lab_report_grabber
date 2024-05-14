@@ -75,15 +75,16 @@ def parse_repo(args: dict, table: list[list[str]]) -> dict[str, list[Work]]:
 
     g = try_auth(cfg['Error']['github_auth'], args['token_file'])
     logins = get_logins(args, table)
+    logins_count = len(logins)
     repos = get_repo_list(g, args, table)
 
     logging.info(cfg['Info']['repo_names'].format(names=get_repos_list_for_logs(repos)))
     logging.info(cfg['Info']['ignore_works_list'].format(ignore=cfg['List']['ignore_works']))
     works_names = get_work_names(args, table)
     works = {login: [] for login in logins}
+    uniq_students = set()
     for repo in repos:
         contents = repo.get_contents("")
-        uniq_students = set()
         for content in contents:
             if args['eng_names']:
                 if content.name not in works_names:
@@ -116,11 +117,15 @@ def parse_repo(args: dict, table: list[list[str]]) -> dict[str, list[Work]]:
 
             index = content.name.rfind('_')
 
-            eng_name = content.name[index + 1:] if index != -1 else content.name
+            eng_name = content.name[index + 1:].lower() if index != -1len(logins) else content.name.lower()
             if not check_work_name(eng_name, login, content):
                 continue
-
-            ru_name, description = args['works_structure'].get(eng_name, eng_name)
+            
+            if eng_name in args['works_structure']:
+                ru_name, description = args['works_structure'][eng_name]
+            else:
+                ru_name = eng_name
+                description = ""
 
             logging.info(cfg['Info']['current_student'].format(login=login, name=eng_name))
 
@@ -129,7 +134,7 @@ def parse_repo(args: dict, table: list[list[str]]) -> dict[str, list[Work]]:
             
             if login not in uniq_students:
                 uniq_students.add(login)
-                print(f"students count: {len(uniq_students)}/{len(logins)}")
+                print(f"students count: {len(uniq_students)}/{logins_count}")
 
     g.close()
     return works
