@@ -117,7 +117,7 @@ def parse_repo(args: dict, table: list[list[str]]) -> dict[str, list[Work]]:
 
             index = content.name.rfind('_')
 
-            eng_name = content.name[index + 1:].lower() if index != -1len(logins) else content.name.lower()
+            eng_name = content.name[index + 1:].lower() if index != -1 else content.name.lower()
             if not check_work_name(eng_name, login, content):
                 continue
             
