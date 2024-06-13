@@ -93,3 +93,27 @@
 ``` python3 main.py  --nfull_name_col "ФИО" --ngroup_col "Группа" --ngithub_col "Логин на github" --prefix moevm/pr-2023-{group} --token "ghp_MyGitHubLogin" -s input/struct_of_works_example.csv -o result2.cs --num_header_rows 2 --google_table https://docs.google.com/spreadsheets/d/MyGoogleTable/edit#gid=1030499006```
 
 ```python3 main.py --neng_name_col "Имя" --neng_surname_col "Фамилия" --nfull_name_col "ФИО" --ngroup_col "Группа" --ngithub_col "Логин на github" --prefix moevm/pr-2023-{group} --token "ghp_MyGitHubToken" -s input/struct_of_works_example.csv -o result2.cs --num_header_rows 2 --google_table https://docs.google.com/spreadsheets/d/MyGoogleTable/edit#gid=1030499006 --eng_names True```
+
+
+## Работа через Docker
+
+Сборка 
+
+```
+docker build -t lab-report-grabber ./
+```
+
+
+Запуск 
+
+```
+docker run -v lab-report-grabber-out:/app/out  -it lab-report-grabber <параметры скрипта, см. инструкцию выше>
+```
+
+Извлечение таблицы:
+
+```
+docker volume inspect lab-report-grabber-out
+```
+
+Далее найдите путь в графе Mountpoint и скопируйте из него файл, который вы указали в опции -o .
