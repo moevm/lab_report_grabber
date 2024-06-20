@@ -13,7 +13,7 @@ class Work:
     def code_to_string(self) -> str:
         code = ""
         for file_name in self.code:
-            code += cfg['Const']['code_format'].format(file_name=file_name, code=self.code[file_name])
+            code += "&^<\\multiline>{file_name}:\n{code}".format(file_name=file_name, code=self.code[file_name])
 
         return code
 

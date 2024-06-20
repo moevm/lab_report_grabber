@@ -109,7 +109,7 @@ def parse_repo(args: dict, table: list[list[str]]) -> dict[str, list[Work]]:
             try:
                 for file in files:
                     try:
-                        code[file.name] = file.decoded_content.decode('utf-8').replace('\n', '\\n')
+                        code[file.name] = file.decoded_content.decode('utf-8')
                     except:
                         logging.warning(cfg['Warning']['get_files'].format(name=content.name, login=login))
             except:
@@ -120,7 +120,7 @@ def parse_repo(args: dict, table: list[list[str]]) -> dict[str, list[Work]]:
             eng_name = content.name[index + 1:].lower() if index != -1 else content.name.lower()
             if not check_work_name(eng_name, login, content):
                 continue
-            
+
             if eng_name in args['works_structure']:
                 ru_name, description = args['works_structure'][eng_name]
             else:
@@ -131,7 +131,7 @@ def parse_repo(args: dict, table: list[list[str]]) -> dict[str, list[Work]]:
 
             works[login].append(Work(eng_name=eng_name, ru_name=ru_name,
                                      description=description, code=code))
-            
+
             if login not in uniq_students:
                 uniq_students.add(login)
                 print(f"students count: {len(uniq_students)}/{logins_count}")
