@@ -1,3 +1,6 @@
+import csv
+import os
+
 from github import Repository, Github
 import logging
 import json
@@ -36,6 +39,13 @@ def get_logins(args: dict, table: list[list[str]]) -> set[str]:
     return logins
 
 
+def get_mapped_names(args: dict, table: list[list[str]]) -> set[str]:
+    return {
+        row[args['github_col'] - 1].lower(): row[args['full_name_col'] - 1]
+        for row in table
+    }
+
+
 def check_autor(author, content) -> bool:
     if not author:
         logging.warning(cfg['Warning']['author'].format(name=content.name))
@@ -70,6 +80,10 @@ def try_get_files(login, repo, content):
         return False
 
 
+def get_missing_students(processed_logins: list[str], logins: list[str]):
+    return list(set(logins) - set(processed_logins))
+
+
 def parse_repo(args: dict, table: list[list[str]]) -> dict[str, list[Work]]:
     logging.info(cfg['Info']['parse_repos'])
 
@@ -93,7 +107,7 @@ def parse_repo(args: dict, table: list[list[str]]) -> dict[str, list[Work]]:
                 login = works_names[content.name]
             else:
                 last_commit = repo.get_commits(path=content.path)[0]
-                author = last_commit.author
+                author = last_commit.author.lower()
                 if not check_autor(author, content):
                     continue
 
@@ -137,4 +151,11 @@ def parse_repo(args: dict, table: list[list[str]]) -> dict[str, list[Work]]:
                 print(f"students count: {len(uniq_students)}/{logins_count}")
 
     g.close()
+    mapped_names = get_mapped_names(args, table)
+    with open(os.path.join('out', 'missing_students'), 'w') as f:
+        writer = csv.writer(f)
+        for k in mapped_names:
+            if k not in uniq_students:
+                writer.writerow([mapped_names[k], k])
+
     return works
