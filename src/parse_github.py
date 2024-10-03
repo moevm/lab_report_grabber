@@ -107,7 +107,7 @@ def parse_repo(args: dict, table: list[list[str]]) -> dict[str, list[Work]]:
                 login = works_names[content.name]
             else:
                 last_commit = repo.get_commits(path=content.path)[0]
-                author = last_commit.author.lower()
+                author = last_commit.author
                 if not check_autor(author, content):
                     continue
 
