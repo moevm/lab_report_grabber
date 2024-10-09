@@ -59,6 +59,7 @@
 |`--github_col`ИЛИ `--ngithub_col`| Номер столбца с github логинами студентов (нумерация с единицы) / название столбца с github логинами студентов|студентов|
 |`--eng_name_col` ИЛИ `--neng_name_col`|Номер столбца с транслитирироваными на англиский язык именами студентов (нумерация с единицы) / название столбца с транслитирироваными на англиский язык именами студентов|
 |`--eng_surname_col` ИЛИ `--neng_surname_col`|Номер столбца с транслитирироваными на англиский язык фамилиями студентов (нумерация с единицы) / название столбца с транслитирироваными на англиский язык фамилиями студентов|
+|`--lb_idxs`| Номера столбов с баллами за ЛР (по возрастанию номера ЛР, нумерация с 1). Пример: "7;8;9;10" -- будет соотвествовать ЛР с номерами 1, 2, 3 и 4|
 #### Примеры
 `-p students_table.csv`\
  `--google_table https://docs.google.com/spreadsheets/d/MyGoogleTable#gid=07` \
@@ -88,11 +89,7 @@
 Открыть нужный лист, скопировать ссылку из адрессной строки
 
 ## Примеры запуска
-```python3 main.py -p input/students_table_example.csv  --full_name_col 1 --group_col 2 --github_col 6 --prefix moevm/cs-2023-{group} --token_file input/token.txt -s input/struct_of_works_example.csv -o result2.cs --num_header_rows 2```
-
-``` python3 main.py  --nfull_name_col "ФИО" --ngroup_col "Группа" --ngithub_col "Логин на github" --prefix moevm/pr-2023-{group} --token "ghp_MyGitHubLogin" -s input/struct_of_works_example.csv -o result2.cs --num_header_rows 2 --google_table https://docs.google.com/spreadsheets/d/MyGoogleTable/edit#gid=1030499006```
-
-```python3 main.py --neng_name_col "Имя" --neng_surname_col "Фамилия" --nfull_name_col "ФИО" --ngroup_col "Группа" --ngithub_col "Логин на github" --prefix moevm/pr-2023-{group} --token "ghp_MyGitHubToken" -s input/struct_of_works_example.csv -o result2.cs --num_header_rows 2 --google_table https://docs.google.com/spreadsheets/d/MyGoogleTable/edit#gid=1030499006 --eng_names True```
+```python3 main.py --nfull_name_col "ФИО" --ngroup_col "Группа" --ngithub_col "Логин на github" --prefix moevm/pr-2023-{group} -s input/struct_of_works_example.csv -o result2.cs --num_header_rows 2 --google_table https://docs.google.com/spreadsheets/d/sometable --token ghp_foo --lb_idxs "7;8;9;10"```
 
 
 ## Работа через Docker
