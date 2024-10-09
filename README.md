@@ -7,7 +7,7 @@
 
 1. Клонирование репозитория 
 
-```git clone -b demo git@github.com:moevm/lab_report_grabber.git```
+```git clone -b find_work_for_names git@github.com:moevm/lab_report_grabber.git```
 
 2. Переход в директорию lab_report_grabber
 
