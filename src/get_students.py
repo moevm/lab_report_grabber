@@ -12,8 +12,9 @@ def get_students(works: dict, args: dict, table: list[list[str]]) -> list[Studen
         login = row[args['github_col'] - 1].lower()
         full_name = row[args['full_name_col'] - 1]
         group = row[args['group_col'] - 1]
-        if login not in works.keys() or works[login] == []:
-            continue
+        work = works.get(login, None)
+        if work is None:
+            work = []
 
         logging.info(cfg['Info']['add_student'].format(full_name=full_name,
                                                        login=login, group=group))

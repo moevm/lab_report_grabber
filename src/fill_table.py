@@ -36,3 +36,31 @@ def write_rows(args: dict, students: list[Student]) -> None:
         logging.error(cfg['Error']['output'].format(e=e))
         exit(0)
     return
+
+
+def write_missing_studens_detail(args: dict, students: list[Student], table: list[list[str]]) -> None:
+    missing = [["Группа", "ФИО", "GitHub", "lb№"]]
+    for student in students:
+        s_row = None
+        for row in table:
+            if row[args['github_col'] - 1].lower() == student.github:
+                s_row = row
+                break
+        else:
+            continue
+        s_lbs = [work.eng_name[2:] for work in student.works]
+        for i in args['lb_idxs']:
+            if s_row[i - 1] != '' and str(i - args['lb_idxs'][0] + 1) not in s_lbs:
+                missing.append([
+                    student.group,
+                    student.full_name, student.github, f"lb{i - args['lb_idxs'][0] + 1}"
+                ])
+    try:
+        logging.info(cfg['Info']['write_table'])
+        os.makedirs('out', exist_ok=True)
+        with open(os.path.join('out', 'write_missing_studens_detail'), 'w') as f:
+            writer = csv.writer(f)
+            writer.writerows(missing)
+    except Exception as e:
+        logging.error(cfg['Error']['output'].format(e=e))
+        exit(0)

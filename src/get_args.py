@@ -115,6 +115,10 @@ def init_parser() -> argparse.ArgumentParser:
                         type=str, default='out',
                         help="Output table name")
 
+    parser.add_argument("--lb_idxs",
+                        type=str, required=True,
+                        help="lb cols idxs (1 numeration): 5;6;7...")
+
     return parser
 
 
@@ -150,5 +154,6 @@ def get_args() -> dict:
                               args['works_structure'], read_csv_table)
     works_structure = {row[0]: [row[1], row[2]] for row in rows}
     args['works_structure'] = works_structure
+    args['lb_idxs'] = list(map(int, args['lb_idxs'].split(";")))
 
     return args
