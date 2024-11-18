@@ -9,17 +9,21 @@ on:
 jobs:
 
   smoke-test:
-
     runs-on: ubuntu-24.04
-
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Install requirements
-      run: pip install -r requirements.txt
+      - name: Install requirements
+        run: pip install -r requirements.txt
 
-    - name: Run app
-      run: python3 main.py --nfull_name_col "ФИО" --ngroup_col "Группа" --ngithub_col "Логин на github" --prefix moevm/pr-2023-{group} -s input/struct_of_works_example.csv -o result2.cs --num_header_rows 2 --google_table https://docs.google.com/spreadsheets/d/1gYpThsy30p1iUNjyYnXIGMrxhYANYyququSdLA266Cw/edit?gid=0#gid=0 --lb_idxs "1;2;3;4"  --token ${{ secrets.TEST_TOKEN_GITHUB }}
+      - name: Run app
+        run: python3 main.py --nfull_name_col "ФИО" --ngroup_col "Группа" --ngithub_col "Логин на github" --prefix moevm/pr-2023-{group} -s input/struct_of_works_example.csv -o result2.cs --num_header_rows 2 --google_table https://docs.google.com/spreadsheets/d/1gYpThsy30p1iUNjyYnXIGMrxhYANYyququSdLA266Cw/edit?gid=0#gid=0 --lb_idxs "1;2;3;4"  --token ${{ secrets.TEST_TOKEN_GITHUB }}
 
-    - name: Show files
-      run: ls
+      - name: Show files
+        run: ls
+
+      - name: Show google_students_table_auto.csv
+        run: cat google_students_table_auto.csv
+
+      - name: log
+        run: cat log
