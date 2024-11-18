@@ -8,8 +8,10 @@ cfg = get_config()
 
 def parse_table(args: dict) -> list[list[str]]:
     logging.info(cfg['Info']['parse_table'].format(where='local directory'))
+    print(f"Try open table-file: {args['path']}")
     table = try_work_with_file(cfg['Error']['file'].format(name='students table'), args['path'], read_csv_table)
     table = table[args['num_header_rows']:]
+    print(f"Table {args['path']} has been read")
     return table
 
 

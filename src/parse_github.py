@@ -148,6 +148,7 @@ def parse_repo(args: dict, table: list[list[str]]) -> dict[str, list[Work]]:
 
             if login not in uniq_students:
                 uniq_students.add(login)
+                print(f"current student: {login}")
                 print(f"students count: {len(uniq_students)}/{logins_count}")
 
     g.close()
