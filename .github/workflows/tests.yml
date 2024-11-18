@@ -32,7 +32,7 @@ jobs:
         run: cat log/logs.log
 
       - name: Show out/out.csv
-        run: cat out/out.csv
+        run: ls
 
       - name: Show out/missing_students
         run: cat out/missing_students
