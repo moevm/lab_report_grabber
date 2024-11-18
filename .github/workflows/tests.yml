@@ -25,9 +25,6 @@ jobs:
       - name: Show files
         run: ls
 
-      - name: Show google_students_table_auto.csv
-        run: cat google_students_table_auto.csv
-
       - name: Show debug.log
         run: cat log/debug.log
 
